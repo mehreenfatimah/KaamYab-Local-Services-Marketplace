@@ -411,3 +411,265 @@
   font-size:11px;
   font-weight:600;
 }
+
+/* Quick action panel refinement */
+.quick-actions{
+  margin-top:14px;
+  margin-bottom:18px;
+  padding:7px;
+  border-radius:16px;
+  background:#f5f6f8;
+  gap:7px;
+}
+
+.quick-actions button{
+  min-height:42px;
+  border:0;
+  border-radius:11px;
+  background:#fff;
+  padding:10px 12px;
+  font-size:10.8px;
+  font-weight:600;
+  color:#596171;
+  justify-content:center;
+  box-shadow:0 1px 0 rgba(20,28,48,.03);
+}
+
+.quick-actions button svg{
+  width:16px;
+  height:16px;
+}
+
+.quick-actions + .section-title{
+  margin-top:0;
+}
+
+/* Homepage section spacing refinement */
+
+.quick-actions + .section-title{
+  margin-top:10px;
+}
+
+.refined-promo{
+  margin-bottom:24px;
+}
+
+.refined-promo + .section-title{
+  margin-top:0;
+}
+
+/* ===== FINAL HOMEPAGE RHYTHM ===== */
+
+/* Block 1: brand + location */
+.home-top{
+  margin-bottom:18px;
+}
+
+.home-wordmark-button{
+  padding:0;
+  border:0;
+  background:transparent;
+}
+
+.home-wordmark{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  color:#2457ff;
+  font-family:"Trebuchet MS",Arial,sans-serif;
+  font-size:22px;
+  line-height:.68;
+  font-weight:900;
+  font-style:italic;
+  letter-spacing:-1.8px;
+  transform:skewX(-10deg) rotate(-2deg);
+}
+
+.home-wordmark span:last-child{
+  margin-left:16px;
+}
+
+.location-row{
+  margin-top:5px;
+  padding:4px 0 5px;
+}
+
+.location-row>span:nth-child(2){
+  gap:4px;
+}
+
+.location-row small{
+  margin-bottom:2px;
+}
+
+/* Block 2: main request area */
+.clean-hero{
+  margin-top:19px;
+}
+
+.clean-hero h1{
+  margin-top:23px;
+}
+
+.premium-search{
+  margin-top:21px;
+}
+
+.quick-actions{
+  margin-top:14px;
+  margin-bottom:0;
+}
+
+/* Clear separation before Services */
+.quick-actions + .section-title{
+  margin-top:27px;
+  margin-bottom:12px;
+}
+
+/* Block 3: services + quick request */
+.premium-services{
+  margin-bottom:23px;
+}
+
+.premium-services .service-glyph,
+.premium-services .service-tile:nth-child(2) .service-glyph,
+.premium-services .service-tile:nth-child(3) .service-glyph,
+.premium-services .service-tile:nth-child(4) .service-glyph{
+  background:#2457ff;
+  color:#fff;
+  border:0;
+}
+
+.premium-services .service-glyph svg{
+  color:#fff;
+  stroke:#fff;
+}
+
+.refined-promo{
+  margin-top:0;
+  margin-bottom:0;
+}
+
+/* Clear separation before nearby workers */
+.refined-promo + .section-title{
+  margin-top:29px;
+  margin-bottom:10px;
+}
+
+/* Block 4: nearby workers */
+.nearby-list{
+  margin-top:0;
+}
+
+.improved-worker{
+  padding-top:13px;
+  padding-bottom:13px;
+}
+
+/* ===== FINAL HOMEPAGE RHYTHM ===== */
+
+/* Block 1: brand + location */
+.home-top{
+  margin-bottom:18px;
+}
+
+.home-wordmark-button{
+  padding:0;
+  border:0;
+  background:transparent;
+}
+
+.home-wordmark{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  color:#2457ff;
+  font-family:"Trebuchet MS",Arial,sans-serif;
+  font-size:22px;
+  line-height:.68;
+  font-weight:900;
+  font-style:italic;
+  letter-spacing:-1.8px;
+  transform:skewX(-10deg) rotate(-2deg);
+}
+
+.home-wordmark span:last-child{
+  margin-left:16px;
+}
+
+.location-row{
+  margin-top:5px;
+  padding:4px 0 5px;
+}
+
+.location-row>span:nth-child(2){
+  gap:4px;
+}
+
+.location-row small{
+  margin-bottom:2px;
+}
+
+/* Block 2: main request area */
+.clean-hero{
+  margin-top:19px;
+}
+
+.clean-hero h1{
+  margin-top:23px;
+}
+
+.premium-search{
+  margin-top:21px;
+}
+
+.quick-actions{
+  margin-top:14px;
+  margin-bottom:0;
+}
+
+/* Clear separation before Services */
+.quick-actions + .section-title{
+  margin-top:27px;
+  margin-bottom:12px;
+}
+
+/* Block 3: services + quick request */
+.premium-services{
+  margin-bottom:23px;
+}
+
+.premium-services .service-glyph,
+.premium-services .service-tile:nth-child(2) .service-glyph,
+.premium-services .service-tile:nth-child(3) .service-glyph,
+.premium-services .service-tile:nth-child(4) .service-glyph{
+  background:#2457ff;
+  color:#fff;
+  border:0;
+}
+
+.premium-services .service-glyph svg{
+  color:#fff;
+  stroke:#fff;
+}
+
+.refined-promo{
+  margin-top:0;
+  margin-bottom:0;
+}
+
+/* Clear separation before nearby workers */
+.refined-promo + .section-title{
+  margin-top:29px;
+  margin-bottom:10px;
+}
+
+/* Block 4: nearby workers */
+.nearby-list{
+  margin-top:0;
+}
+
+.improved-worker{
+  padding-top:13px;
+  padding-bottom:13px;
+}

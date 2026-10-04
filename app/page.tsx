@@ -144,9 +144,10 @@ export default function Page(){
 
   function HomeScreen(){return <div className="screen home-screen">
     <div className="home-top">
-      <button className="brand-button" onClick={()=>setScreen("home")}>
-        <span className="brand-mark">K</span>
-        <span>KaamYab</span>
+      <button className="brand-button home-wordmark-button" onClick={()=>setScreen("home")}>
+        <span className="home-wordmark">
+          <span>Kaam</span><span>Yab</span>
+        </span>
       </button>
       <button className="lang-button" onClick={()=>setLang(ur?"en":"ur")}>
         <Languages size={15}/>
