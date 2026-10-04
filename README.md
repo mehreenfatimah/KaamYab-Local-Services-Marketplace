@@ -2,6 +2,8 @@
 
 KaamYab is a bilingual local-services marketplace for Pakistan. It connects customers who need nearby help with skilled workers who want local work.
 
+Live Demo: https://kaam-yab-local-services-marketplace.vercel.app
+
 The core marketplace flow is simple:
 
 **describe a need → confirm location/time/budget → receive nearby offers → compare price, availability and reputation → choose a worker → complete and review the job**
