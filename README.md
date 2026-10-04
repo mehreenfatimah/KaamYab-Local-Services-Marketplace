@@ -1,6 +1,6 @@
 # KaamYab — Local Services Marketplace
 
-KaamYab is a bilingual local-services marketplace concept for Pakistan. It connects customers who need nearby help with skilled workers who want local work.
+KaamYab is a bilingual local-services marketplace for Pakistan. It connects customers who need nearby help with skilled workers who want local work.
 
 The core marketplace flow is simple:
 
@@ -52,7 +52,7 @@ Voice is an accessibility layer, not a dependency. Every important flow also wor
 - responsive CSS without a UI framework
 - browser geolocation
 - `MediaRecorder` for short voice recordings
-- optional Groq Whisper transcription through a server route
+- Groq-powered speech transcription through a server-side API route
 - PWA manifest
 
 ## Run locally
@@ -65,11 +65,8 @@ npm run dev
 
 Open `http://localhost:3000`.
 
-Voice transcription is optional. To enable it, set:
-
-```text
-GROQ_API_KEY=your_key_here
-```
+KaamYab supports short voice-assisted requests in English, Urdu and Roman Urdu. Text input remains available whenever voice is unavailable.
+Add GROQ_API_KEY to .env.local to enable voice transcription.
 
 Never commit `.env.local`.
 
@@ -80,9 +77,9 @@ npm run check
 npm run build
 ```
 
-## Data and production scope
+## Current Scope
 
-The included workers, jobs, offers, ratings and earnings are synthetic demo data. This repository demonstrates the product experience and front-end marketplace logic; it is not presented as a live marketplace.
+The repository includes realistic sample workers, offers, ratings, earnings and job activity to demonstrate the complete marketplace experience.
 
 A production deployment would require persistent accounts, phone verification, a real database, location-aware matching, notifications, moderation, worker verification, media storage, abuse controls and privacy/legal review.
 
@@ -90,4 +87,4 @@ See `docs/PRODUCTION_ARCHITECTURE.md` for the proposed production path.
 
 ## Project background
 
-KaamYab began as a university/hackathon concept around bilingual worker discovery and voice-assisted access to local work. This version develops that original idea into a more complete two-sided marketplace while keeping the same purpose: making local skilled work easier to request and easier to access.
+KaamYab originated as a hackathon project focused on improving access to local skilled workers through bilingual and voice-assisted interactions. Since then, the project has been expanded into a two-sided marketplace with customer and worker flows, location-aware discovery, service requests, worker offers, ratings and job tracking.
