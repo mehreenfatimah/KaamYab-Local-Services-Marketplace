@@ -1,0 +1,911 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KaamYab — Final Product UI System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#eef1f5;
+  --surface:#ffffff;
+  --surface-2:#f5f6f7;
+  --surface-3:#eef2ff;
+  --ink:#15171c;
+  --muted:#747a84;
+  --line:#e7e9ee;
+  --primary:#2457ff;
+  --primary-dark:#173ec1;
+  --accent:#ffb14a;
+  --accent-soft:#fff1d7;
+  --success:#1aa66a;
+  --success-soft:#e7f7ef;
+  --danger:#e34f59;
+  --shadow:0 14px 38px rgba(16,24,40,.08);
+  --r-xl:28px;
+  --r-lg:20px;
+  --r-md:14px;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:linear-gradient(180deg,#e8edf3 0%,#f6f7f9 100%);
+  color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+button,input{font:inherit}
+.page{max-width:1560px;margin:auto;padding:24px 20px 64px}
+.reviewbar{
+  display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:20px
+}
+.reviewbar h1{font-size:25px;line-height:1.1;margin:0;font-weight:600;letter-spacing:-.45px}
+.reviewbar p{margin:6px 0 0;font-size:13px;color:var(--muted);max-width:760px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap}
+.tab{
+  border:1px solid #d8dce5;background:#fff;border-radius:999px;padding:9px 14px;
+  font-size:12px;font-weight:600;color:#4d5565;cursor:pointer
+}
+.tab.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(280px,1fr));gap:24px;align-items:start}
+.group-title{
+  grid-column:1/-1;font-size:15px;font-weight:600;color:#596171;
+  margin:8px 0 -4px;padding:0 4px
+}
+.frame{max-width:365px;margin:auto}
+.phone{
+  position:relative;min-height:780px;background:#fff;border:1px solid #dfe3ea;
+  border-radius:32px;overflow:hidden;box-shadow:var(--shadow)
+}
+.status{
+  height:25px;background:#fff;display:flex;justify-content:center;align-items:center;
+  font-size:10px;color:#969daa
+}
+.screen{padding:14px 16px 86px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.back{
+  width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:#fff;
+  display:grid;place-items:center;font-size:19px
+}
+.brand{display:flex;align-items:center;gap:8px}
+.brand-mark{
+  width:29px;height:29px;border-radius:10px;background:var(--primary);color:#fff;
+  display:grid;place-items:center;font-weight:600;font-size:12px
+}
+.brand-name{font-size:20px;font-weight:600;letter-spacing:-.35px}
+.lang{
+  border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 10px;
+  font-size:10px;font-weight:600;color:#51596a
+}
+.hero{
+  margin:14px -16px 0;padding:18px 16px 20px;
+  background:linear-gradient(145deg,#f6f8ff 0%,#ffffff 52%,#fff6e8 100%);
+  border-top:1px solid #f1f2f5;border-bottom:1px solid #eceef2
+}
+.location{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px}
+.loc-left{display:flex;align-items:center;gap:9px}
+.loc-icon{
+  width:32px;height:32px;border-radius:11px;background:#eef2ff;display:grid;place-items:center;color:var(--primary)
+}
+.loc-small{font-size:10px;color:var(--muted)}
+.loc-main{font-size:12.5px;font-weight:600;margin-top:1px}
+.title{
+  font-size:25px;line-height:1.12;font-weight:500;letter-spacing:-.65px;margin:0 0 8px
+}
+.subtitle{font-size:12px;line-height:1.48;color:var(--muted);margin:0}
+.search{
+  display:flex;align-items:center;gap:9px;background:#fff;border:1px solid #dfe3ea;
+  border-radius:18px;padding:10px 10px 10px 13px;margin-top:14px;
+  box-shadow:0 7px 20px rgba(20,28,48,.04)
+}
+.search input{flex:1;border:0;outline:0;background:transparent;font-size:12.5px;color:#626a79}
+.ico{width:19px;height:19px;stroke:#545d6e;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.mic{
+  width:42px;height:42px;border:0;border-radius:14px;background:var(--primary);display:grid;place-items:center
+}
+.mic .ico{stroke:#fff;width:21px;height:21px}
+.quick{display:flex;gap:8px;margin-top:8px}
+.quick button{flex:1;border:1px solid var(--line);background:#fff;border-radius:12px;padding:9px;font-size:10.5px;font-weight:600;color:#596171}
+.section{display:flex;align-items:end;justify-content:space-between;margin:20px 0 10px}
+.section h3{font-size:15.5px;font-weight:600;margin:0;letter-spacing:-.2px}
+.section a{font-size:10.5px;color:var(--primary);font-weight:600}
+.services{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.service{text-align:center}
+.service-box{
+  width:58px;height:58px;border-radius:17px;margin:auto;display:grid;place-items:center;
+  background:#f5f6f7;border:1px solid #eceef2
+}
+.service:nth-child(1) .service-box{background:#eef2ff}
+.service:nth-child(2) .service-box{background:#fff0e5}
+.service:nth-child(3) .service-box{background:#ebf6ef}
+.service:nth-child(4) .service-box{background:#fff6d9}
+.service-box .ico{width:24px;height:24px}
+.service:nth-child(1) .ico{stroke:var(--primary)}
+.service:nth-child(2) .ico{stroke:#d96f37}
+.service:nth-child(3) .ico{stroke:#208b5b}
+.service:nth-child(4) .ico{stroke:#a27b16}
+.service span{display:block;margin-top:7px;font-size:10.3px;font-weight:600}
+.promo{
+  margin-top:18px;border-radius:20px;padding:15px;background:var(--ink);color:white;
+  position:relative;overflow:hidden;min-height:126px
+}
+.promo:before{
+  content:"";position:absolute;width:130px;height:130px;border-radius:50%;
+  right:-34px;top:-48px;background:rgba(36,87,255,.85)
+}
+.promo:after{
+  content:"";position:absolute;width:82px;height:82px;border-radius:24px;
+  right:30px;bottom:-28px;background:rgba(255,177,74,.95);transform:rotate(22deg)
+}
+.promo-copy{position:relative;z-index:2;max-width:64%}
+.promo small{font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:#c9d0df}
+.promo h4{font-size:16px;line-height:1.24;font-weight:500;margin:5px 0 6px}
+.promo p{font-size:10.2px;line-height:1.4;color:#d8dde7;margin:0}
+.worker{
+  background:#fff;border:1px solid var(--line);border-radius:18px;padding:12px;margin-top:9px
+}
+.worker-head{display:flex;align-items:center;gap:10px}
+.avatar{
+  width:46px;height:46px;border-radius:15px;background:#eef2ff;color:var(--primary);
+  display:grid;place-items:center;font-size:12px;font-weight:600
+}
+.row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.name{font-size:12.5px;font-weight:600}
+.meta{font-size:9.8px;color:var(--muted);margin-top:2px}
+.badge{font-size:8.3px;padding:5px 7px;border-radius:999px;background:var(--success-soft);color:#16784f;font-weight:600}
+.price{font-size:12px;font-weight:600}
+.nav{
+  position:absolute;left:0;right:0;bottom:0;height:68px;background:rgba(255,255,255,.98);
+  border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);align-items:center;padding:7px 8px 9px
+}
+.navitem{text-align:center;font-size:8.6px;color:#98a0ae}
+.navitem svg{display:block;margin:0 auto 4px;width:18px;height:18px;stroke:#98a0ae;fill:none;stroke-width:1.8}
+.navitem.active{color:var(--primary);font-weight:600}.navitem.active svg{stroke:var(--primary)}
+.askdot{width:46px;height:46px;border-radius:16px;background:var(--primary);display:grid;place-items:center;margin:-20px auto 0;box-shadow:0 10px 20px rgba(36,87,255,.25)}
+.askdot svg{stroke:#fff!important}
+
+/* Common pages */
+.page-title{font-size:23px;font-weight:500;letter-spacing:-.5px;margin:18px 0 6px}
+.page-sub{font-size:12px;line-height:1.45;color:var(--muted);margin:0 0 16px}
+.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:13px}
+.list{background:#f6f6f3;border-radius:18px;padding:4px 13px}
+.list-row{display:flex;align-items:center;gap:11px;padding:13px 0;border-bottom:1px solid #e6e6e0}
+.list-row:last-child{border-bottom:0}
+.list-icon{
+  width:34px;height:34px;border-radius:10px;background:#fff;display:grid;place-items:center;flex:none
+}
+.list-title{font-size:12.5px;font-weight:500}
+.list-sub{font-size:10px;color:var(--muted);margin-top:2px}
+.chev{margin-left:auto;color:#707780;font-size:18px}
+.primary{width:100%;border:0;background:var(--primary);color:#fff;border-radius:15px;padding:13px;font-size:12px;font-weight:600}
+.secondary{width:100%;border:1px solid var(--line);background:#fff;color:#51596a;border-radius:15px;padding:12px;font-size:11px;font-weight:600;margin-top:8px}
+.field{margin-bottom:12px}
+.label{font-size:10.5px;font-weight:600;color:#555e70;margin-bottom:6px}
+.input{border:1px solid var(--line);background:#f8f9fb;border-radius:14px;padding:12px;font-size:12px;color:#4f586b}
+.choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.choice{border:1px solid var(--line);border-radius:13px;padding:11px;font-size:10.8px;font-weight:600;background:#fff}
+.choice.on{border-color:#b8c7ff;background:#eef2ff;color:#214ad0}
+.progress{display:flex;gap:5px;margin:7px 0 16px}
+.progress i{height:4px;border-radius:999px;background:#e7eaf0;flex:1}
+.progress i.on{background:var(--primary)}
+.summary{background:#f5f6f7;border-radius:16px;padding:12px}
+.offer{border:1px solid var(--line);border-radius:18px;padding:12px;margin-top:10px}
+.offer-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.offer-actions button{border:1px solid var(--line);background:#fff;border-radius:12px;padding:10px;font-size:10.5px;font-weight:600}
+.offer-actions .accept{background:var(--primary);color:#fff;border-color:var(--primary)}
+.center{text-align:center}
+.big-icon{
+  width:92px;height:92px;border-radius:28px;background:#eef2ff;color:var(--primary);
+  display:grid;place-items:center;margin:18px auto
+}
+.big-icon svg{width:42px;height:42px;stroke:currentColor;fill:none;stroke-width:1.6}
+.empty-illustration{height:230px;display:grid;place-items:center;margin:8px 0}
+.empty-illustration .art{
+  width:190px;height:150px;position:relative
+}
+.empty-illustration .art:before{
+  content:"";position:absolute;inset:22px 20px 20px 15px;background:var(--accent);opacity:.85;
+  transform:rotate(-6deg);border-radius:32px 26px 40px 22px
+}
+.empty-illustration .art:after{
+  content:"";position:absolute;width:110px;height:64px;border-radius:18px;background:#fff;
+  left:42px;top:48px;box-shadow:0 11px 30px rgba(22,28,45,.12)
+}
+.filters{display:flex;gap:8px;flex-wrap:wrap}
+.filter{padding:8px 11px;border-radius:999px;background:#f3f4f6;font-size:10.5px;font-weight:600}
+.filter.on{background:var(--ink);color:#fff}
+.map{
+  height:345px;margin:0 -16px 0;position:relative;overflow:hidden;
+  background:
+    linear-gradient(30deg,transparent 48%,#e7ebef 49%,#e7ebef 53%,transparent 54%) 0 0/80px 80px,
+    linear-gradient(-28deg,transparent 48%,#e5e9ed 49%,#e5e9ed 52%,transparent 53%) 20px 10px/95px 95px,
+    #f7f8f9;
+}
+.map:before{
+  content:"";position:absolute;width:250px;height:10px;background:#d6dde5;left:-30px;top:130px;transform:rotate(24deg);
+  box-shadow:0 80px 0 #d6dde5,0 160px 0 #d6dde5
+}
+.pin{position:absolute;width:44px;height:44px;border-radius:50%;background:var(--primary);left:50%;top:47%;transform:translate(-50%,-50%);border:7px solid #fff;box-shadow:0 5px 18px rgba(36,87,255,.28)}
+.map-card{position:absolute;left:50%;top:30%;transform:translateX(-50%);background:#fff;border-radius:14px;padding:10px 13px;box-shadow:0 8px 24px rgba(24,32,51,.12);font-size:11px}
+.bottom-sheet{margin:0 -16px;padding:18px 16px 0;background:#fff;border-radius:24px 24px 0 0;position:relative}
+.handle{width:38px;height:4px;border-radius:99px;background:#d5d9df;margin:-8px auto 14px}
+.chat{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+.bubble{max-width:78%;padding:10px 12px;border-radius:15px;font-size:11px;line-height:1.4}
+.mine{align-self:flex-end;background:var(--primary);color:#fff;border-bottom-right-radius:5px}
+.theirs{align-self:flex-start;background:#f2f4f7;border-bottom-left-radius:5px}
+.rating{font-size:28px;letter-spacing:4px;color:var(--accent)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{border:1px solid var(--line);border-radius:14px;padding:10px;text-align:center}
+.stat b{display:block;font-size:14px;font-weight:600}.stat span{font-size:9px;color:var(--muted)}
+.gallery{display:grid;grid-template-columns:1.3fr .7fr;gap:8px}
+.gbig,.gsmall{background:linear-gradient(135deg,#dce4ff,#f1f4ff);border-radius:16px}
+.gbig{height:130px}.gsmall{height:61px}
+.online{
+  background:var(--ink);color:#fff;border-radius:20px;padding:15px;margin-top:12px
+}
+.toggle{width:48px;height:28px;border-radius:99px;background:var(--primary);padding:3px}
+.knob{width:22px;height:22px;border-radius:50%;background:#fff;margin-left:20px}
+.earn{font-size:28px;font-weight:500;letter-spacing:-.7px}
+.spark{
+  height:110px;border-radius:18px;background:
+  linear-gradient(180deg,rgba(36,87,255,.14),rgba(36,87,255,0)),
+  linear-gradient(135deg,transparent 0 15%,#2457ff 16% 18%,transparent 19% 36%,#2457ff 37% 39%,transparent 40% 54%,#2457ff 55% 58%,transparent 59% 76%,#2457ff 77% 80%,transparent 81%);
+}
+
+/* Voice modal */
+.dim:before{content:"";position:absolute;inset:0;background:rgba(18,24,38,.42);z-index:4}
+.voice-sheet{
+  position:absolute;left:0;right:0;bottom:0;z-index:5;background:#fff;border-radius:28px 28px 0 0;padding:10px 17px 24px;
+  box-shadow:0 -22px 50px rgba(20,28,48,.16)
+}
+.voice-sheet h2{font-size:20px;font-weight:500;margin:0 0 6px;letter-spacing:-.4px}
+.voice-sheet p{font-size:11.5px;color:var(--muted);line-height:1.45;margin:0}
+.example{background:#f4f5f7;border-radius:12px;padding:10px;font-size:10.5px;color:#51596a;margin-top:7px}
+.record{
+  width:84px;height:84px;border-radius:50%;margin:18px auto 8px;background:var(--primary);
+  display:grid;place-items:center;box-shadow:0 14px 30px rgba(36,87,255,.26)
+}
+.record svg{width:33px;height:33px;stroke:#fff;fill:none;stroke-width:1.7}
+
+/* captions */
+.caption{text-align:center;margin-top:10px;font-size:11.5px;font-weight:600}
+.caption2{text-align:center;margin-top:3px;font-size:9.8px;color:#7f8795}
+
+/* RTL */
+.rtl{direction:rtl;text-align:right;font-family:"Noto Sans Arabic",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.rtl .top,.rtl .location,.rtl .loc-left,.rtl .worker-head,.rtl .row,.rtl .list-row{flex-direction:row-reverse}
+.rtl .title{font-family:"Noto Sans Arabic";font-size:22px;line-height:1.5;font-weight:500;letter-spacing:0}
+.rtl .subtitle,.rtl .loc-small,.rtl .loc-main,.rtl .meta,.rtl .name,.rtl .label,.rtl .input,.rtl .section h3,.rtl .service span{font-family:"Noto Sans Arabic"}
+.rtl .chev{margin-left:0;margin-right:auto}
+.rtl input{text-align:right;font-family:"Noto Sans Arabic"}
+
+@media(max-width:1280px){.grid{grid-template-columns:repeat(3,minmax(280px,1fr))}}
+@media(max-width:960px){.grid{grid-template-columns:repeat(2,minmax(280px,1fr))}}
+@media(max-width:650px){.grid{grid-template-columns:1fr}.reviewbar{flex-direction:column;align-items:flex-start}}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="reviewbar">
+    <div>
+      <h1>KaamYab — Final Product UI System</h1>
+      <p>Inspired by the restraint, clarity and real-app feel of modern mobility products — without copying their layout, branding or visual language. Mostly white, one confident brand color, one warm accent, native-style typography, and consistent mobile spacing.</p>
+    </div>
+    <div class="tabs">
+      <button class="tab active" onclick="show('customer',this)">Customer</button>
+      <button class="tab" onclick="show('worker',this)">Worker</button>
+      <button class="tab" onclick="show('account',this)">Account & System</button>
+      <button class="tab" onclick="show('urdu',this)">Urdu</button>
+    </div>
+  </div>
+
+  <!-- CUSTOMER -->
+  <div class="grid view" data-view="customer">
+    <div class="group-title">Entry & discovery</div>
+
+    <div class="frame">
+      <div class="phone">
+        <div class="status">9:41</div>
+        <div class="screen">
+          <div class="top"><div class="brand"><div class="brand-mark">K</div><div class="brand-name">KaamYab</div></div><button class="lang">اردو</button></div>
+          <div class="hero">
+            <div class="location">
+              <div class="loc-left"><div class="loc-icon">⌖</div><div><div class="loc-small">Your location</div><div class="loc-main">Bahria Town, Rawalpindi</div></div></div>
+              <div>›</div>
+            </div>
+            <h2 class="title">What do you need help with today?</h2>
+            <p class="subtitle">Describe the problem in your own words. KaamYab helps you find the right person nearby.</p>
+          </div>
+          <div class="search">
+            <svg class="ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="m16 16 4 4"/></svg>
+            <input placeholder="Describe the problem">
+            <button class="mic"><svg class="ico" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M6 11a6 6 0 0 0 12 0M12 17v4"/></svg></button>
+          </div>
+          <div class="quick"><button>Add a photo</button><button>Browse services</button></div>
+
+          <div class="section"><h3>Popular services</h3><a>See all</a></div>
+          <div class="services">
+            <div class="service"><div class="service-box"><svg class="ico" viewBox="0 0 24 24"><path d="M8 3h8M10 3v5a4 4 0 0 0 4 4h3v3a4 4 0 0 1-4 4H9"/></svg></div><span>Plumbing</span></div>
+            <div class="service"><div class="service-box"><svg class="ico" viewBox="0 0 24 24"><path d="m13 2-7 11h6l-1 9 7-12h-6l1-8Z"/></svg></div><span>Electrical</span></div>
+            <div class="service"><div class="service-box"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg></div><span>AC Repair</span></div>
+            <div class="service"><div class="service-box"><svg class="ico" viewBox="0 0 24 24"><path d="M4 18h16M6 18l2-10h8l2 10"/></svg></div><span>Cleaning</span></div>
+          </div>
+
+          <div class="promo">
+            <div class="promo-copy"><small>Quick request</small><h4>Post once. Compare nearby offers.</h4><p>See price, rating and arrival time before you choose.</p></div>
+          </div>
+
+          <div class="section"><h3>Top-rated nearby</h3><a>View all</a></div>
+          <div class="worker">
+            <div class="worker-head"><div class="avatar">AR</div><div style="flex:1"><div class="row"><div class="name">Ahmed Raza</div><span class="badge">Available</span></div><div class="meta">Electrician · ★ 4.9 · 184 jobs · 1.2 km</div></div></div>
+          </div>
+        </div>
+        <div class="nav">
+          <div class="navitem active">⌂<br>Home</div><div class="navitem">▣<br>Requests</div><div class="navitem"><div class="askdot">🎙</div>Ask</div><div class="navitem">◷<br>Activity</div><div class="navitem">◯<br>Account</div>
+        </div>
+      </div>
+      <div class="caption">Home</div><div class="caption2">White-first, clear hierarchy, restrained brand color.</div>
+    </div>
+
+    <div class="frame">
+      <div class="phone">
+        <div class="status">9:41</div>
+        <div class="screen">
+          <div class="top"><button class="back">←</button><div class="name">All services</div><span></span></div>
+          <h2 class="page-title">What can we help with?</h2>
+          <p class="page-sub">Choose a category or search for the task you need.</p>
+          <div class="search"><svg class="ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="m16 16 4 4"/></svg><input placeholder="Search services"></div>
+          <div class="list" style="margin-top:14px">
+            <div class="list-row"><div class="list-icon">🔧</div><div><div class="list-title">Plumbing</div><div class="list-sub">Leaks, taps, pipes, fittings</div></div><div class="chev">›</div></div>
+            <div class="list-row"><div class="list-icon">⚡</div><div><div class="list-title">Electrical</div><div class="list-sub">Lights, fans, wiring, switches</div></div><div class="chev">›</div></div>
+            <div class="list-row"><div class="list-icon">❄</div><div><div class="list-title">AC & cooling</div><div class="list-sub">Repair, service, installation</div></div><div class="chev">›</div></div>
+            <div class="list-row"><div class="list-icon">🧹</div><div><div class="list-title">Cleaning</div><div class="list-sub">Home, office, deep clean</div></div><div class="chev">›</div></div>
+            <div class="list-row"><div class="list-icon">🪚</div><div><div class="list-title">Carpentry</div><div class="list-sub">Furniture, doors, woodwork</div></div><div class="chev">›</div></div>
+            <div class="list-row"><div class="list-icon">🎨</div><div><div class="list-title">Painting</div><div class="list-sub">Rooms, walls, touch-ups</div></div><div class="chev">›</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="caption">Service directory</div><div class="caption2">Simple list treatment rather than card overload.</div>
+    </div>
+
+    <div class="frame">
+      <div class="phone dim">
+        <div class="status">9:41</div>
+        <div class="screen"><div class="top"><div class="brand"><div class="brand-mark">K</div><div class="brand-name">KaamYab</div></div><button class="lang">اردو</button></div></div>
+        <div class="voice-sheet">
+          <div class="handle"></div>
+          <h2>Tell us what’s wrong</h2>
+          <p>Speak naturally. One short description is enough.</p>
+          <div class="example">“My AC is running but it isn’t cooling.”</div>
+          <div class="example">“Mere kitchen sink se pani leak ho raha hai.”</div>
+          <div class="record"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M6 11a6 6 0 0 0 12 0M12 17v4"/></svg></div>
+          <div class="center"><div class="name">Hold to speak</div><div class="meta">Release when you’re done</div></div>
+          <button class="secondary">Type instead</button>
+        </div>
+      </div>
+      <div class="caption">Voice request</div><div class="caption2">Short, focused, no live transcript wall.</div>
+    </div>
+
+    <div class="frame">
+      <div class="phone">
+        <div class="status">9:41</div>
+        <div class="screen">
+          <div class="top"><button class="back">←</button><div class="name">Add a photo</div><span></span></div>
+          <h2 class="page-title">Show us the problem</h2>
+          <p class="page-sub">A photo can help the worker understand what tools or parts may be needed.</p>
+          <div style="height:300px;border-radius:22px;background:linear-gradient(135deg,#eef2ff,#fff6e8);display:grid;place-items:center;border:1px dashed #cfd5df">
+            <div class="center"><div style="font-size:46px">📷</div><div class="name" style="margin-top:8px">Take a photo or choose from gallery</div><div class="meta">Up to 5 photos</div></div>
+          </div>
+          <button class="primary" style="margin-top:14px">Add photo</button>
+          <button class="secondary">Skip for now</button>
+        </div>
+      </div>
+      <div class="caption">Photo request</div><div class="caption2">Photo is optional support, not mandatory friction.</div>
+    </div>
+
+    <div class="group-title">Request creation</div>
+
+    <div class="frame">
+      <div class="phone">
+        <div class="status">9:41</div><div class="screen">
+          <div class="top"><button class="back">←</button><div class="name">New request</div><span></span></div>
+          <div class="progress"><i class="on"></i><i class="on"></i><i></i><i></i></div>
+          <h2 class="page-title">Confirm the details</h2>
+          <p class="page-sub">We understood this from your request. Change anything that looks wrong.</p>
+          <div class="field"><div class="label">Service</div><div class="input">AC repair</div></div>
+          <div class="field"><div class="label">Problem</div><div class="input">AC is running but not cooling properly.</div></div>
+          <div class="field"><div class="label">Location</div><div class="input">Bahria Town Phase 4, Rawalpindi</div></div>
+          <button class="primary">Continue</button>
+        </div>
+      </div>
+      <div class="caption">Request details</div><div class="caption2">One task per screen, no giant form.</div>
+    </div>
+
+    <div class="frame">
+      <div class="phone">
+        <div class="status">9:41</div>
+        <div class="screen" style="padding-top:0">
+          <div class="map"><button class="back" style="position:absolute;top:16px;left:16px;z-index:3">←</button><div class="map-card"><div class="meta">Pickup point</div><div class="name">Street 8, Bahria Town</div></div><div class="pin"></div></div>
+          <div class="bottom-sheet">
+            <div class="handle"></div>
+            <h2 class="page-title" style="margin-top:0">Confirm location</h2>
+            <p class="page-sub">Move the pin if needed, then save this address.</p>
+            <div class="input">Street 8, Bahria Town Phase 4, Rawalpindi</div>
+            <button class="primary" style="margin-top:12px">Use this location</button>
+          </div>
+        </div>
+      </div>
+      <div class="caption">Location</div><div class="caption2">Map used where it actually helps the task.</div>
+    </div>
+
+    <div class="frame">
+      <div class="phone">
+        <div class="status">9:41</div><div class="screen">
+          <div class="top"><button class="back">←</button><div class="name">New request</div><span></span></div>
+          <div class="progress"><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div>
+          <h2 class="page-title">When and for how much?</h2>
+          <div class="field"><div class="label">When do you need help?</div><div class="choice-grid"><div class="choice on">Today</div><div class="choice">Tomorrow</div><div class="choice">This week</div><div class="choice">Choose time</div></div></div>
+          <div class="field"><div class="label">Your budget</div><div class="input">Rs. 2,000 – 3,000</div></div>
+          <div class="field"><div class="label">Urgency</div><div class="choice-grid"><div class="choice on">As soon as possible</div><div class="choice">Flexible</div></div></div>
+          <button class="primary">Continue</button>
+        </div>
+      </div>
+      <div class="caption">Time & budget</div><div class="caption2">Familiar choice chips, simple request economics.</div>
+    </div>
+
+    <div class="frame">
+      <div class="phone">
+        <div class="status">9:41</div><div class="screen">
+          <div class="top"><button class="back">←</button><div class="name">Review request</div><span></span></div>
+          <h2 class="page-title">Ready to post?</h2>
+          <div class="summary">
+            <div class="row"><div><div class="name">AC repair</div><div class="meta">AC running but not cooling</div></div><span class="badge">Today</span></div>
+            <div style="height:1px;background:#e4e7ec;margin:12px 0"></div>
+            <div class="row"><span class="meta">Location</span><div class="name">Bahria Town</div></div>
+            <div class="row" style="margin-top:8px"><span class="meta">Budget</span><div class="name">Rs. 2,000 – 3,000</div></div>
+          </div>
+          <button class="primary" style="margin-top:14px">Post request</button>
+          <button class="secondary">Edit details</button>
+        </div>
+      </div>
+      <div class="caption">Review request</div><div class="caption2">Explicit confirmation before marketplace matching starts.</div>
+    </div>
+
+    <div class="frame">
+      <div class="phone">
+        <div class="status">9:41</div><div class="screen center">
+          <div class="big-icon">✓</div>
+          <h2 class="page-title">Your request is live</h2>
+          <p class="page-sub">Nearby AC technicians can now send you offers. We’ll notify you as they arrive.</p>
+          <div class="card" style="margin-top:18px;text-align:left">
+            <div class="row"><div><div class="name">AC repair</div><div class="meta">Bahria Town · Today</div></div><span class="badge">Live</span></div>
+          </div>
+          <button class="primary" style="margin-top:16px">View offers</button>
+          <button class="secondary">Back to home</button>
+        </div>
+      </div>
+      <div class="caption">Request posted</div><div class="caption2">Clear success state, no decorative overload.</div>
+    </div>
+
+    <div class="group-title">Matching, job & review</div>
+
+    <div class="frame">
+      <div class="phone">
+        <div class="status">9:41</div><div class="screen">
+          <div class="top"><button class="back">←</button><div class="name">Offers</div><button class="lang">#KY1048</button></div>
+          <div class="summary"><div class="row"><div><div class="name">AC repair</div><div class="meta">Bahria Town · Today</div></div><span class="badge">3 offers</span></div></div>
+          <div class="section"><h3>Compare offers</h3><a>Sort</a></div>
+          <div class="offer">
+            <div class="worker-head"><div class="avatar">AR</div><div style="flex:1"><div class="row"><div class="name">Ahmed Raza</div><span class="badge">Top rated</span></div><div class="meta">★ 4.9 · 184 jobs · 1.1 km</div></div></div>
+            <div class="row" style="margin-top:11px"><div><div class="meta">Offer</div><div class="price">Rs. 2,400</div></div><div><div class="meta">Can arrive</div><div class="name" style="font-size:11px">30–45 min</div></div></div>
+            <div class="offer-actions"><button>Profile</button><button class="accept">Accept</button></div>
+          </div>
+          <div class="offer">
+            <div class="worker-head"><div class="avatar" style="background:#fff0e5;color:#c86632">BK</div><div style="flex:1"><div class="row"><div class="name">Bilal Khan</div><span class="badge">Available</span></div><div class="meta">★ 4.7 · 91 jobs · 1.8 km</div></div></div>
+            <div class="row" style="margin-top:11px"><div><div class="meta">Offer</div><div class="price">Rs. 2,000</div></div><div><div class="meta">Can arrive</div><div class="name" style="font-size:11px">About 1 hour</div></div></div>
+            <div class="offer-actions"><button>Profile</button><button class="accept">Accept</button></div>
+          </div>
+        </div>
+      </div>
+      <div class="caption">Offers</div><div class="caption2">Price, ETA, trust and distance at a glance.</div>
+    </div>
+
+    <div class="frame">
+      <div class="phone">
+        <div class="status">9:41</div><div class="screen">
+          <div class="top"><button class="back">←</button><div class="name">Worker profile</div><span></span></div>
+          <div class="center" style="padding-top:8px">
+            <div class="avatar" style="width:74px;height:74px;border-radius:22px;margin:auto;font-size:20px">AR</div>
+            <div class="page-title" style="margin-bottom:3px">Ahmed Raza</div><div class="meta">Electrician · Rawalpindi</div>
+            <div style="margin-top:8px"><span class="badge">Identity verified</span> <span class="badge">Available now</span></div>
+          </div>
+          <div class="stats" style="margin-top:14px"><div class="stat"><b>4.9</b><span>Rating</span></div><div class="stat"><b>184</b><span>Jobs</span></div><div class="stat"><b>6 yrs</b><span>Experience</span></div></div>
+          <div class="section"><h3>Recent work</h3><a>See all</a></div>
+          <div class="gallery"><div class="gbig"></div><div><div class="gsmall"></div><div class="gsmall" style="margin-top:8px;background:linear-gradient(135deg,#fff0e5,#fff8f1)"></div></div></div>
+          <div class="section"><h3>Reviews</h3><a>184 reviews</a></div>
+          <div class="card"><div class="name">★★★★★</div><div class="meta" style="margin-top:5px">“Reached on time and fixed the problem properly.”</div></div>
+          <button class="primary" style="margin-top:14px">Request Ahmed</button>
+        </div>
+      </div>
+      <div class="caption">Worker profile</div><div class="caption2">Trust evidence first: identity, work, jobs and reviews.</div>
+    </div>
+
+    <div class="frame">
+      <div class="phone">
+        <div class="status">9:41</div><div class="screen">
+          <div class="top"><button class="back">←</button><div class="name">Current job</div><button class="lang">Help</button></div>
+          <div class="summary"><span class="badge">Confirmed</span><div class="page-title" style="font-size:20px;margin:9px 0 4px">AC repair</div><div class="meta">Ahmed Raza · Rs. 2,400</div></div>
+          <div class="section"><h3>Status</h3></div>
+          <div class="card">
+            <div class="row"><div class="name" style="color:var(--success)">✓ Worker selected</div><span class="meta">10:21</span></div>
+            <div style="height:20px;border-left:2px solid #dbe3ff;margin-left:6px"></div>
+            <div class="row"><div class="name" style="color:var(--primary)">● On the way</div><span class="badge" style="background:#eef2ff;color:#214ad0">Live</span></div>
+            <div style="height:20px;border-left:2px solid #e7e9ee;margin-left:6px"></div>
+            <div class="meta">○ Arrived</div>
+            <div style="height:20px;border-left:2px solid #e7e9ee;margin-left:6px"></div>
+            <div class="meta">○ Job complete</div>
+          </div>
+          <button class="primary" style="margin-top:14px">Call worker</button>
+          <button class="secondary">Message</button>
+        </div>
+      </div>
+      <div class="caption">Active job</div><div class="caption2">Familiar status progression; no clutter.</div>
+    </div>
+
+    <div class="frame">
+      <div class="phone">
+        <div class="status">9:41</div><div class="screen">
+          <div class="top"><button class="back">←</button><div class="name">Ahmed Raza</div><span></span></div>
+          <div class="chat">
+            <div class="bubble theirs">Assalam o Alaikum. I can reach in around 35 minutes.</div>
+            <div class="bubble mine">Perfect, please call when you arrive.</div>
+            <div class="bubble theirs">Sure. I’ll bring the required tools as well.</div>
+          </div>
+          <div style="position:absolute;left:16px;right:16px;bottom:18px;display:flex;gap:8px">
+            <div class="input" style="flex:1">Write a message…</div><button class="mic" style="width:44px;height:44px">➤</button>
+          </div>
+        </div>
+      </div>
+      <div class="caption">Chat</div><div class="caption2">Simple task-specific communication.</div>
+    </div>
+
+    <div class="frame">
+      <div class="phone">
+        <div class="status">9:41</div><div class="screen center">
+          <div class="big-icon" style="background:var(--success-soft);color:var(--success)">✓</div>
+          <h2 class="page-title">Job completed</h2>
+          <p class="page-sub">Ahmed marked the AC repair as complete.</p>
+          <div class="card" style="text-align:left;margin-top:10px"><div class="row"><span class="meta">Final amount</span><div class="name">Rs. 2,400</div></div><div class="row" style="margin-top:8px"><span class="meta">Completed</span><div class="name">Today, 2:18 PM</div></div></div>
+          <button class="primary" style="margin-top:16px">Rate your experience</button>
+        </div>
+      </div>
+      <div class="caption">Job complete</div><div class="caption2">Clear end state and next action.</div>
+    </div>
+
+    <div class="frame">
+      <div class="phone">
+        <div class="status">9:41</div><div class="screen center">
+          <button class="back" style="position:absolute;left:16px;top:42px">←</button>
+          <div class="avatar" style="width:68px;height:68px;border-radius:20px;margin:30px auto 8px">AR</div>
+          <h2 class="page-title">How was Ahmed?</h2>
+          <div class="rating">★★★★★</div>
+          <p class="page-sub">Your review helps other customers choose confidently.</p>
+          <div class="input" style="text-align:left;height:110px">Write a short review…</div>
+          <button class="primary" style="margin-top:14px">Submit review</button>
+          <button class="secondary">Skip</button>
+        </div>
+      </div>
+      <div class="caption">Rating & review</div><div class="caption2">Short, familiar, trustworthy.</div>
+    </div>
+  </div>
+
+  <!-- WORKER -->
+  <div class="grid view" data-view="worker" style="display:none">
+    <div class="group-title">Worker onboarding & daily flow</div>
+
+    <div class="frame">
+      <div class="phone">
+        <div class="status">9:41</div><div class="screen center">
+          <div class="brand" style="justify-content:center;margin-top:18px"><div class="brand-mark">K</div><div class="brand-name">KaamYab Pro</div></div>
+          <div class="big-icon" style="background:var(--accent-soft);color:#c06a16;margin-top:40px">⚒</div>
+          <h2 class="page-title">Earn from the skills you already have.</h2>
+          <p class="page-sub">Create your profile, go online when you want, and receive nearby job requests.</p>
+          <button class="primary" style="margin-top:20px">Get started</button>
+          <button class="secondary">I already have an account</button>
+        </div>
+      </div>
+      <div class="caption">Worker onboarding</div><div class="caption2">Clear value proposition, no technical language.</div>
+    </div>
+
+    <div class="frame">
+      <div class="phone">
+        <div class="status">9:41</div><div class="screen">
+          <div class="top"><button class="back">←</button><div class="name">Create your profile</div><span></span></div>
+          <div class="progress"><i class="on"></i><i class="on"></i><i></i></div>
+          <h2 class="page-title">Tell customers what you do</h2>
+          <div class="field"><div class="label">Full name</div><div class="input">Ahmed Raza</div></div>
+          <div class="field"><div class="label">Primary skill</div><div class="input">Electrician</div></div>
+          <div class="field"><div class="label">City / area</div><div class="input">Rawalpindi · Bahria Town</div></div>
+          <div class="field"><div class="label">Experience</div><div class="input">6 years</div></div>
+          <div class="field"><div class="label">Starting rate</div><div class="input">Rs. 1,500</div></div>
+          <button class="primary">Continue</button>
+        </div>
+      </div>
+      <div class="caption">Profile setup</div><div class="caption2">Deterministic fields; no AI guessing.</div>
+    </div>
+
+    <div class="frame">
+      <div class="phone">
+        <div class="status">9:41</div><div class="screen">
+          <div class="top"><div class="brand"><div class="brand-mark">K</div><div class="brand-name">KaamYab Pro</div></div><button class="lang">Customer mode</button></div>
+          <div class="online"><div class="row"><div><div class="meta" style="color:#bcc4d3">Work status</div><div style="font-size:20px;font-weight:500;margin-top:2px">You’re online</div></div><div class="toggle"><div class="knob"></div></div></div><div class="meta" style="color:#cfd5df;margin-top:9px">Nearby jobs can appear while you’re available.</div></div>
+          <div class="stats" style="margin-top:10px"><div class="stat"><b>Rs. 8.4k</b><span>This week</span></div><div class="stat"><b>12</b><span>Jobs</span></div><div class="stat"><b>4.8</b><span>Rating</span></div></div>
+          <div class="section"><h3>Jobs near you</h3><a>Filter</a></div>
+          <div class="worker"><div class="row"><span class="badge" style="background:#eef2ff;color:#214ad0">Plumbing</span><span class="meta">1.6 km</span></div><div class="name" style="margin-top:8px">Kitchen sink leaking</div><div class="meta">Bahria Town Phase 4 · Today</div><div class="row" style="margin-top:10px"><div><div class="meta">Budget</div><div class="price">Rs. 1,500–2,000</div></div><button class="lang" style="background:var(--primary);color:#fff;border-color:var(--primary)">View</button></div></div>
+          <div class="worker"><div class="row"><span class="badge">Electrical</span><span class="meta">2.2 km</span></div><div class="name" style="margin-top:8px">Ceiling fan not working</div><div class="meta">PWD · Today</div></div>
+        </div>
+        <div class="nav"><div class="navitem active">⌂<br>Home</div><div class="navitem">▤<br>Jobs</div><div class="navitem"><div class="askdot" style="background:var(--success)">●</div>Online</div><div class="navitem">₨<br>Earnings</div><div class="navitem">◯<br>Account</div></div>
+      </div>
+      <div class="caption">Worker home</div><div class="caption2">Driver-style availability, but tailored to local services.</div>
+    </div>
+
+    <div class="frame">
+      <div class="phone">
+        <div class="status">9:41</div><div class="screen">
+          <div class="top"><button class="back">←</button><div class="name">Job details</div><span></span></div>
+          <div class="summary"><div class="row"><span class="badge" style="background:#eef2ff;color:#214ad0">Plumbing</span><span class="meta">1.6 km</span></div><div class="page-title" style="font-size:20px;margin:10px 0 5px">Kitchen sink leaking</div><div class="meta">Bahria Town Phase 4 · Needed today</div></div>
+          <div class="section"><h3>Customer request</h3></div>
+          <div class="card"><div class="meta">Description</div><div class="name" style="margin-top:5px">Water is leaking from under the kitchen sink.</div></div>
+          <div class="row" style="margin-top:12px"><div><div class="meta">Budget</div><div class="price">Rs. 1,500–2,000</div></div><div><div class="meta">Distance</div><div class="price">1.6 km</div></div></div>
+          <button class="primary" style="margin-top:16px">Accept budget</button>
+          <button class="secondary">Send another offer</button>
+        </div>
+      </div>
+      <div class="caption">Job detail</div><div class="caption2">Enough context to decide, nothing extra.</div>
+    </div>
+
+    <div class="frame">
+      <div class="phone">
+        <div class="status">9:41</div><div class="screen">
+          <div class="top"><button class="back">←</button><div class="name">Send an offer</div><span></span></div>
+          <h2 class="page-title">Your offer</h2>
+          <div class="field"><div class="label">Price</div><div class="input">Rs. 1,800</div></div>
+          <div class="field"><div class="label">When can you arrive?</div><div class="choice-grid"><div class="choice on">30–45 min</div><div class="choice">1 hour</div><div class="choice">2 hours</div><div class="choice">Choose time</div></div></div>
+          <div class="field"><div class="label">Optional note</div><div class="input">I can inspect and repair the leak today.</div></div>
+          <button class="primary">Send offer</button>
+        </div>
+      </div>
+      <div class="caption">Send offer</div><div class="caption2">Simple counter-offer model.</div>
+    </div>
+
+    <div class="frame">
+      <div class="phone">
+        <div class="status">9:41</div><div class="screen">
+          <div class="top"><div class="name">Current job</div><button class="lang">Help</button></div>
+          <div class="summary"><span class="badge">Confirmed</span><div class="page-title" style="font-size:20px;margin:10px 0 4px">Kitchen sink leaking</div><div class="meta">Bahria Town · Rs. 1,800</div></div>
+          <div class="section"><h3>Status</h3></div>
+          <div class="card">
+            <div class="row"><div class="name" style="color:var(--success)">✓ Accepted</div><span class="meta">10:18</span></div>
+            <div style="height:20px;border-left:2px solid #dbe3ff;margin-left:6px"></div>
+            <div class="row"><div class="name" style="color:var(--primary)">● On the way</div><span class="badge" style="background:#eef2ff;color:#214ad0">Current</span></div>
+            <div style="height:20px;border-left:2px solid #e7e9ee;margin-left:6px"></div><div class="meta">○ Arrived</div>
+            <div style="height:20px;border-left:2px solid #e7e9ee;margin-left:6px"></div><div class="meta">○ Job complete</div>
+          </div>
+          <button class="primary" style="margin-top:14px">I’ve arrived</button>
+          <button class="secondary">Call customer</button>
+        </div>
+      </div>
+      <div class="caption">Worker active job</div><div class="caption2">Same status language on both sides.</div>
+    </div>
+
+    <div class="frame">
+      <div class="phone">
+        <div class="status">9:41</div><div class="screen">
+          <div class="top"><div class="name">Earnings</div><button class="lang">This week</button></div>
+          <div class="meta" style="margin-top:20px">Total earnings</div><div class="earn">Rs. 8,400</div>
+          <div class="spark" style="margin-top:16px"></div>
+          <div class="stats" style="margin-top:12px"><div class="stat"><b>12</b><span>Jobs</span></div><div class="stat"><b>Rs. 700</b><span>Avg. job</span></div><div class="stat"><b>4.8</b><span>Rating</span></div></div>
+          <div class="section"><h3>Recent earnings</h3></div>
+          <div class="list"><div class="list-row"><div><div class="list-title">Kitchen sink repair</div><div class="list-sub">Today</div></div><div class="chev" style="font-size:12px;color:#15171c">Rs. 1,800</div></div><div class="list-row"><div><div class="list-title">Fan installation</div><div class="list-sub">Yesterday</div></div><div class="chev" style="font-size:12px;color:#15171c">Rs. 1,200</div></div></div>
+        </div>
+      </div>
+      <div class="caption">Earnings</div><div class="caption2">Readable, practical, not finance-dashboard heavy.</div>
+    </div>
+
+    <div class="frame">
+      <div class="phone">
+        <div class="status">9:41</div><div class="screen">
+          <div class="top"><button class="back">←</button><div class="name">Reviews</div><span></span></div>
+          <div class="center" style="margin-top:20px"><div class="earn">4.8</div><div class="rating" style="font-size:20px">★★★★★</div><div class="meta">126 reviews</div></div>
+          <div class="section"><h3>Latest reviews</h3></div>
+          <div class="card"><div class="name">★★★★★</div><div class="meta" style="margin-top:5px">“Very professional and on time.”</div><div class="list-sub" style="margin-top:6px">Hammad · 2 days ago</div></div>
+          <div class="card" style="margin-top:9px"><div class="name">★★★★★</div><div class="meta" style="margin-top:5px">“Solved the issue quickly.”</div><div class="list-sub" style="margin-top:6px">Sara · 1 week ago</div></div>
+        </div>
+      </div>
+      <div class="caption">Worker reviews</div><div class="caption2">Credibility is central to the marketplace.</div>
+    </div>
+  </div>
+
+  <!-- ACCOUNT -->
+  <div class="grid view" data-view="account" style="display:none">
+    <div class="group-title">Authentication, history, account & settings</div>
+
+    <div class="frame">
+      <div class="phone">
+        <div class="status">9:41</div><div class="screen center">
+          <div class="brand" style="justify-content:center;margin-top:24px"><div class="brand-mark">K</div><div class="brand-name">KaamYab</div></div>
+          <div class="big-icon" style="margin-top:48px">◯</div>
+          <h2 class="page-title">Log in or create an account</h2>
+          <p class="page-sub">Use your phone number to manage requests, messages and saved workers.</p>
+          <div class="input" style="text-align:left">+92 3XX XXXXXXX</div>
+          <button class="primary" style="margin-top:12px">Continue</button>
+          <button class="secondary">Continue as guest</button>
+        </div>
+      </div>
+      <div class="caption">Login</div><div class="caption2">Phone-first, low-friction.</div>
+    </div>
+
+    <div class="frame">
+      <div class="phone">
+        <div class="status">9:41</div><div class="screen">
+          <div class="top"><button class="back">←</button><div class="name">Verify number</div><span></span></div>
+          <h2 class="page-title">Enter the 6-digit code</h2>
+          <p class="page-sub">We sent a code to +92 300 1234567.</p>
+          <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:7px;margin:24px 0"><div class="input center">4</div><div class="input center">8</div><div class="input center">2</div><div class="input center">1</div><div class="input center">7</div><div class="input center">3</div></div>
+          <button class="primary">Verify</button>
+          <div class="center meta" style="margin-top:12px">Resend code in 00:28</div>
+        </div>
+      </div>
+      <div class="caption">OTP verification</div><div class="caption2">Production-oriented authentication flow.</div>
+    </div>
+
+    <div class="frame">
+      <div class="phone">
+        <div class="status">9:41</div><div class="screen">
+          <div class="top"><button class="back">←</button><div class="name">Request history</div><span></span></div>
+          <div class="filters" style="margin-top:18px"><div class="filter on">All</div><div class="filter">Completed</div><div class="filter">Cancelled</div></div>
+          <div class="section"><h3>12 Sep</h3></div>
+          <div class="worker"><div class="row"><div><div class="name">AC repair</div><div class="meta">Bahria Town · 4:01 PM</div></div><div class="price">Rs. 2,400</div></div></div>
+          <div class="worker"><div class="row"><div><div class="name">Plumbing</div><div class="meta">PWD · 8:06 AM</div></div><div class="price">Rs. 1,800</div></div></div>
+          <div class="section"><h3>10 Aug</h3></div>
+          <div class="worker"><div class="row"><div><div class="name" style="color:var(--danger)">Cancelled</div><div class="meta">Electrical · Bahria Town</div></div><div class="price">Rs. 0</div></div></div>
+        </div>
+      </div>
+      <div class="caption">Request history</div><div class="caption2">Compact list, easy filters, no bulky cards.</div>
+    </div>
+
+    <div class="frame">
+      <div class="phone">
+        <div class="status">9:41</div><div class="screen center">
+          <button class="back" style="position:absolute;left:16px;top:41px">←</button>
+          <div class="empty-illustration"><div class="art"></div></div>
+          <h2 class="page-title">No completed requests yet</h2>
+          <p class="page-sub">Your finished jobs will appear here.</p>
+          <button class="primary">Create a request</button>
+        </div>
+      </div>
+      <div class="caption">Empty state</div><div class="caption2">Branded illustration without copying mobility apps.</div>
+    </div>
+
+    <div class="frame">
+      <div class="phone">
+        <div class="status">9:41</div><div class="screen">
+          <div class="top"><div class="name" style="font-size:18px">Account</div><button class="lang">اردو</button></div>
+          <div class="worker" style="margin-top:18px"><div class="worker-head"><div class="avatar">MF</div><div><div class="name">Mehreen</div><div class="meta">0300 1234567</div></div><div class="chev">›</div></div></div>
+          <div class="section"><h3>Your KaamYab</h3></div>
+          <div class="list"><div class="list-row"><div class="list-icon">🔔</div><div class="list-title">Notifications</div><div class="chev">›</div></div><div class="list-row"><div class="list-icon">♡</div><div class="list-title">Saved workers</div><div class="chev">›</div></div><div class="list-row"><div class="list-icon">⌖</div><div class="list-title">Addresses</div><div class="chev">›</div></div></div>
+          <div class="section"><h3>Work with KaamYab</h3></div>
+          <div class="list"><div class="list-row"><div class="list-icon">⚒</div><div><div class="list-title">Offer your services</div><div class="list-sub">Create a worker profile</div></div><div class="chev">›</div></div></div>
+          <div class="section"><h3>Support</h3></div>
+          <div class="list"><div class="list-row"><div class="list-icon">?</div><div class="list-title">Help & safety</div><div class="chev">›</div></div></div>
+        </div>
+      </div>
+      <div class="caption">Account</div><div class="caption2">Grouped settings, muted surfaces, clear hierarchy.</div>
+    </div>
+
+    <div class="frame">
+      <div class="phone">
+        <div class="status">9:41</div><div class="screen">
+          <div class="top"><button class="back">←</button><div class="name">App settings</div><span></span></div>
+          <div class="list" style="margin-top:20px"><div class="list-row"><div class="list-icon">◐</div><div><div class="list-title">Appearance</div><div class="list-sub">System default</div></div><div class="chev">›</div></div><div class="list-row"><div class="list-icon">文</div><div><div class="list-title">Language</div><div class="list-sub">English</div></div><div class="chev">›</div></div><div class="list-row"><div class="list-icon">⌖</div><div><div class="list-title">Location sharing</div><div class="list-sub">On while a job is active</div></div><div class="chev">›</div></div></div>
+          <div class="list" style="margin-top:10px"><div class="list-row"><div class="list-icon">▤</div><div class="list-title">Legal documents</div><div class="chev">›</div></div><div class="list-row"><div class="list-icon">i</div><div><div class="list-title">App version</div><div class="list-sub">1.0.0</div></div></div></div>
+          <div class="list" style="margin-top:10px"><div class="list-row"><div class="list-icon">⌫</div><div class="list-title">Delete account</div><div class="chev">›</div></div></div>
+        </div>
+      </div>
+      <div class="caption">Settings</div><div class="caption2">Practical grouped list, native-app proportions.</div>
+    </div>
+
+    <div class="frame">
+      <div class="phone">
+        <div class="status">9:41</div><div class="screen">
+          <div class="top"><button class="back">←</button><div class="name">Safety & support</div><span></span></div>
+          <div class="big-icon" style="background:var(--accent-soft);color:#b1691c">!</div>
+          <h2 class="page-title center">Need help?</h2>
+          <div class="list" style="margin-top:18px"><div class="list-row"><div class="list-icon">☎</div><div><div class="list-title">Contact support</div><div class="list-sub">Get help with a request or account issue</div></div><div class="chev">›</div></div><div class="list-row"><div class="list-icon">⚑</div><div><div class="list-title">Report a worker or customer</div><div class="list-sub">Safety, conduct or fraud concerns</div></div><div class="chev">›</div></div><div class="list-row"><div class="list-icon">▣</div><div><div class="list-title">Safety tips</div><div class="list-sub">Before, during and after a job</div></div><div class="chev">›</div></div></div>
+        </div>
+      </div>
+      <div class="caption">Safety & support</div><div class="caption2">Essential for an actual marketplace product.</div>
+    </div>
+  </div>
+
+  <!-- URDU -->
+  <div class="grid view" data-view="urdu" style="display:none">
+    <div class="group-title">Key Urdu / RTL screens — same product, genuinely localized</div>
+
+    <div class="frame">
+      <div class="phone rtl">
+        <div class="status">9:41</div><div class="screen">
+          <div class="top"><div class="brand"><div class="brand-mark">ک</div><div class="brand-name">کامیاب</div></div><button class="lang">English</button></div>
+          <div class="hero">
+            <div class="location"><div class="loc-left"><div class="loc-icon">⌖</div><div><div class="loc-small">آپ کا مقام</div><div class="loc-main">بحریہ ٹاؤن، راولپنڈی</div></div></div><div>‹</div></div>
+            <h2 class="title">آج آپ کو کس کام میں مدد چاہیے؟</h2>
+            <p class="subtitle">اپنا مسئلہ اپنی زبان میں بتائیں، ہم آپ کے قریب مناسب کاریگر تلاش کرنے میں مدد کریں گے۔</p>
+          </div>
+          <div class="search"><svg class="ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="m16 16 4 4"/></svg><input placeholder="اپنا مسئلہ بتائیں"><button class="mic">🎙</button></div>
+          <div class="quick"><button>تصویر شامل کریں</button><button>خدمات دیکھیں</button></div>
+          <div class="section"><h3>مشہور خدمات</h3><a>سب دیکھیں</a></div>
+          <div class="services">
+            <div class="service"><div class="service-box">🔧</div><span>پلمبنگ</span></div>
+            <div class="service"><div class="service-box">⚡</div><span>الیکٹریشن</span></div>
+            <div class="service"><div class="service-box">❄</div><span>اے سی مرمت</span></div>
+            <div class="service"><div class="service-box">🧹</div><span>صفائی</span></div>
+          </div>
+          <div class="promo"><div class="promo-copy"><small>فوری درخواست</small><h4>ایک درخواست، قریب موجود حقیقی آفرز۔</h4><p>منتخب کرنے سے پہلے قیمت، ریٹنگ اور پہنچنے کا وقت دیکھیں۔</p></div></div>
+        </div>
+      </div>
+      <div class="caption">Urdu home</div><div class="caption2">Noto Sans Arabic, medium weights, full RTL.</div>
+    </div>
+
+    <div class="frame">
+      <div class="phone rtl dim">
+        <div class="status">9:41</div>
+        <div class="voice-sheet">
+          <div class="handle"></div>
+          <h2 style="font-family:'Noto Sans Arabic';line-height:1.5">اپنا مسئلہ بتائیں</h2>
+          <p style="font-family:'Noto Sans Arabic'">عام انداز میں بولیں۔ مختصر بات کافی ہے۔</p>
+          <div class="example">“میرا اے سی چل رہا ہے لیکن ٹھنڈا نہیں کر رہا۔”</div>
+          <div class="example">“کچن کے سنک سے پانی لیک ہو رہا ہے۔”</div>
+          <div class="record">🎙</div>
+          <div class="center"><div class="name">بولنے کے لیے دبائے رکھیں</div><div class="meta">بات مکمل ہونے پر چھوڑ دیں</div></div>
+        </div>
+      </div>
+      <div class="caption">Urdu voice</div><div class="caption2">No mixed labels, no technical words.</div>
+    </div>
+
+    <div class="frame">
+      <div class="phone rtl">
+        <div class="status">9:41</div><div class="screen">
+          <div class="top"><button class="back">→</button><div class="name">آفرز</div><button class="lang">#KY1048</button></div>
+          <div class="summary"><div class="row"><div><div class="name">اے سی مرمت</div><div class="meta">بحریہ ٹاؤن · آج</div></div><span class="badge">3 آفرز</span></div></div>
+          <div class="section"><h3>آفرز کا موازنہ کریں</h3><a>ترتیب</a></div>
+          <div class="offer"><div class="worker-head"><div class="avatar">AR</div><div style="flex:1"><div class="row"><div class="name">احمد رضا</div><span class="badge">اعلیٰ ریٹنگ</span></div><div class="meta">★ 4.9 · 184 کام · 1.1 کلومیٹر</div></div></div><div class="row" style="margin-top:11px"><div><div class="meta">آفر</div><div class="price">2,400 روپے</div></div><div><div class="meta">پہنچنے کا وقت</div><div class="name" style="font-size:11px">30–45 منٹ</div></div></div><div class="offer-actions"><button>پروفائل</button><button class="accept">قبول کریں</button></div></div>
+        </div>
+      </div>
+      <div class="caption">Urdu offers</div><div class="caption2">Same hierarchy carried into RTL.</div>
+    </div>
+
+    <div class="frame">
+      <div class="phone rtl">
+        <div class="status">9:41</div><div class="screen">
+          <div class="top"><div class="brand"><div class="brand-mark">ک</div><div class="brand-name">کامیاب پرو</div></div><button class="lang">کسٹمر موڈ</button></div>
+          <div class="online"><div class="row"><div><div class="meta" style="color:#bcc4d3">کام کی حالت</div><div style="font-size:19px;font-weight:500;margin-top:2px">آپ آن لائن ہیں</div></div><div class="toggle"><div class="knob"></div></div></div></div>
+          <div class="section"><h3>قریب موجود کام</h3><a>فلٹر</a></div>
+          <div class="worker"><div class="row"><span class="badge" style="background:#eef2ff;color:#214ad0">پلمبنگ</span><span class="meta">1.6 کلومیٹر</span></div><div class="name" style="margin-top:8px">کچن کے سنک سے پانی لیک ہو رہا ہے</div><div class="meta">بحریہ ٹاؤن فیز 4 · آج</div><div class="row" style="margin-top:10px"><div><div class="meta">بجٹ</div><div class="price">1,500–2,000 روپے</div></div><button class="lang" style="background:var(--primary);color:#fff;border-color:var(--primary)">دیکھیں</button></div></div>
+        </div>
+      </div>
+      <div class="caption">Urdu worker home</div><div class="caption2">Worker experience is localized too.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+function show(v,b){
+  document.querySelectorAll('.view').forEach(x=>x.style.display='none');
+  document.querySelector('[data-view="'+v+'"]').style.display='grid';
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+}
+</script>
+</body>
+</html>
