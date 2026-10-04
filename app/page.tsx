@@ -1,9 +1,9 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowLeft, Bell, BriefcaseBusiness, Camera, Check, ChevronRight, CircleUserRound,
-  Clock3, Home, Languages, LocateFixed, MapPin, MessageCircle, Mic, Phone,
+  Clock3, Home, Languages, LocateFixed, MapPin, MessageCircle, Mic, Phone, Zap, Snowflake, Sparkles,
   Search, Send, ShieldCheck, Star, Wrench, X, WalletCards
 } from "lucide-react";
 import { workers } from "@/data/workers";
@@ -27,17 +27,25 @@ type Screen = "home"|"services"|"request"|"location"|"schedule"|"review"|"posted
 type Draft = {service:ServiceKey|""; issue:string; area:string; when:"today"|"tomorrow"|"week"|"schedule"; budget:number; urgency:"asap"|"flexible"};
 
 const EN = {
-  home:"Home", requests:"Requests", ask:"Ask", activity:"Activity", account:"Account",
+  home:"Home", requests:"Requests", ask:"Request", activity:"Activity", account:"Account",
   title:"What do you need help with today?", subtitle:"Tell us what’s wrong in your own words and we’ll help you find the right person nearby.",
   problem:"Describe the problem", photo:"Add a photo", browse:"Browse services", popular:"Popular services", nearby:"Top-rated nearby",
 };
 const UR = {
-  home:"ہوم", requests:"درخواستیں", ask:"پوچھیں", activity:"سرگرمی", account:"اکاؤنٹ",
+  home:"ہوم", requests:"درخواستیں", ask:"درخواست", activity:"سرگرمی", account:"اکاؤنٹ",
   title:"آج آپ کو کس کام میں مدد چاہیے؟", subtitle:"اپنا مسئلہ اپنی زبان میں بتائیں، ہم آپ کے قریب مناسب کاریگر تلاش کرنے میں مدد کریں گے۔",
   problem:"اپنا مسئلہ بتائیں", photo:"تصویر شامل کریں", browse:"خدمات دیکھیں", popular:"مشہور خدمات", nearby:"قریب بہترین کاریگر",
 };
 
 export default function Page(){
+  const [showSplash,setShowSplash]=useState(true);
+
+  useEffect(()=>{
+    const timer=setTimeout(()=>setShowSplash(false),1600);
+    return ()=>clearTimeout(timer);
+  },[]);
+
+
   const [lang,setLang]=useState<Language>("en");
   const ur=lang==="ur", t=ur?UR:EN;
   const [screen,setScreen]=useState<Screen>("home");
@@ -48,6 +56,8 @@ export default function Page(){
   const [voiceMessage,setVoiceMessage]=useState("");
   const mediaRef=useRef<MediaRecorder|null>(null);
   const chunksRef=useRef<Blob[]>([]);
+  const photoInputRef=useRef<HTMLInputElement|null>(null);
+  const [problemPhoto,setProblemPhoto]=useState<string>("");
   const [location,setLocation]=useState<[number,number]>([33.5651,73.0169]);
   const [locationLabel,setLocationLabel]=useState("Bahria Town, Rawalpindi");
   const [draft,setDraft]=useState<Draft>({service:"",issue:"",area:"Bahria Town Phase 4, Rawalpindi",when:"today",budget:2400,urgency:"asap"});
@@ -81,6 +91,26 @@ export default function Page(){
   function navTo(k:"home"|"requests"|"ask"|"activity"|"account"){if(k==="home")setScreen("home");if(k==="requests")setScreen("history");if(k==="ask")setVoiceOpen(true);if(k==="activity")setScreen("active");if(k==="account")setScreen("account")}
   const showBottom=!(["location","chat"].includes(screen));
 
+  if(showSplash){
+    return <main className="app splash-app">
+      <div className="app-shell splash-shell">
+
+        <div className="splash-center">
+          <div className="splash-wordmark">
+            <span>Kaam</span><span>Yab</span>
+          </div>
+        </div>
+
+        <div className="splash-footer">
+          <strong>KaamYab</strong>
+          <div className="splash-footer-line"></div>
+          <span className="splash-message">Connecting Pakistan's local workforce</span>
+        </div>
+
+      </div>
+    </main>
+  }
+
   return <main className={ur?"app rtl":"app"} dir={ur?"rtl":"ltr"}>
     <div className="app-shell">
       {screen==="home"?<HomeScreen/>:<ScreenHeader/>}
@@ -113,25 +143,137 @@ export default function Page(){
   </main>
 
   function HomeScreen(){return <div className="screen home-screen">
-    <div className="home-top"><button className="brand-button" onClick={()=>setScreen("home")}><span className="brand-mark">K</span><span>KaamYab</span></button><button className="lang-button" onClick={()=>setLang(ur?"en":"ur")}><Languages size={15}/>{ur?"English":"اردو"}</button></div>
-    <section className="home-hero">
-      <button className="location-row" onClick={locate}><span className="location-icon"><MapPin size={17}/></span><span><small>{ur?"آپ کا مقام":"Your location"}</small><strong>{locationLabel}</strong></span><ChevronRight size={17}/></button>
-      <h1>{t.title}</h1><p>{t.subtitle}</p>
+    <div className="home-top">
+      <button className="brand-button" onClick={()=>setScreen("home")}>
+        <span className="brand-mark">K</span>
+        <span>KaamYab</span>
+      </button>
+      <button className="lang-button" onClick={()=>setLang(ur?"en":"ur")}>
+        <Languages size={15}/>
+        {ur?"English":"اردو"}
+      </button>
+    </div>
+
+    <section className="home-hero clean-hero">
+      <button className="location-row" onClick={()=>setScreen("location")}>
+        <span className="location-icon"><MapPin size={17}/></span>
+        <span>
+          <small>{ur?"آپ کا مقام":"Your location"}</small>
+          <strong>{locationLabel}</strong>
+        </span>
+        <ChevronRight size={17}/>
+      </button>
+
+      <h1>{ur?"آج آپ کو کس کام میں مدد چاہیے؟":"What do you need help with?"}</h1>
+      <p>{ur?"اپنا کام بتائیں اور قریب کے ماہر کاریگروں کی آفرز کا موازنہ کریں۔":"Describe the job and compare nearby professionals."}</p>
     </section>
-    <div className="problem-bar"><Search size={19}/><button className="problem-text" onClick={()=>setScreen("services")}>{t.problem}</button><button className="mic-button" onClick={()=>setVoiceOpen(true)}><Mic size={21}/></button></div>
-    <div className="quick-actions"><button onClick={()=>setScreen("request")}><Camera size={16}/>{t.photo}</button><button onClick={()=>setScreen("services")}><Wrench size={16}/>{t.browse}</button></div>
-    <SectionTitle title={t.popular} action={ur?"سب دیکھیں":"See all"} onClick={()=>setScreen("services")}/>
-    <div className="service-grid">{(["Plumber","Electrician","AC Technician","Cleaner"] as ServiceKey[]).map((s,i)=><button key={s} className={`service-tile s${i+1}`} onClick={()=>chooseService(s)}><span className="service-glyph">{SERVICE_META[s].glyph}</span><span>{ur?SERVICE_META[s].ur:SERVICE_META[s].en}</span></button>)}</div>
-    <button className="promo-card" onClick={()=>setScreen("request")}><div><small>{ur?"فوری درخواست":"QUICK REQUEST"}</small><strong>{ur?"ایک درخواست دیں، قریب کی آفرز دیکھیں۔":"Post once. Compare nearby offers."}</strong><span>{ur?"قیمت، ریٹنگ اور پہنچنے کا وقت پہلے دیکھیں۔":"See price, rating and arrival time before you choose."}</span></div><span className="promo-dot orange"></span><span className="promo-dot blue"></span></button>
-    <SectionTitle title={t.nearby} action={ur?"سب دیکھیں":"View all"} onClick={()=>setScreen("offers")}/>
-    <button className="worker-mini" onClick={()=>{setSelected(nearby[0]);setScreen("workerProfile")}}><WorkerAvatar worker={nearby[0]}/><div><strong>{nearby[0].name}</strong><span>{ur?nearby[0].skillUr:SERVICE_META[nearby[0].skill].en} · ★ {nearby[0].rating} · {nearby[0].jobs} {ur?"کام":"jobs"}</span></div><span className="availability">{ur?"دستیاب":"Available"}</span></button>
+
+    <div className="problem-bar premium-search">
+      <Search size={20}/>
+      <button className="problem-text" onClick={()=>setScreen("services")}>
+        {ur?"مسئلہ یا سروس لکھیں":"Describe the problem or service"}
+      </button>
+      <button className="mic-button" onClick={()=>setVoiceOpen(true)}>
+        <Mic size={21}/>
+      </button>
+    </div>
+
+    <div className="quick-actions subtle-actions">
+      <button onClick={()=>photoInputRef.current?.click()}>
+        <Camera size={16}/>
+        {ur?"تصویر شامل کریں":"Add photo"}
+      </button>
+      <input
+        ref={photoInputRef}
+        type="file"
+        accept="image/*"
+        hidden
+        onChange={e=>{
+          const file=e.target.files?.[0];
+          if(!file)return;
+          const reader=new FileReader();
+          reader.onload=()=>{
+            setProblemPhoto(String(reader.result||""));
+            setScreen("request");
+          };
+          reader.readAsDataURL(file);
+        }}
+      />
+      <button onClick={()=>setScreen("services")}>
+        <Wrench size={16}/>
+        {ur?"خدمات دیکھیں":"Browse services"}
+      </button>
+    </div>
+
+    <SectionTitle title={ur?"خدمات":"Services"} action={ur?"سب دیکھیں":"See all"} onClick={()=>setScreen("services")}/>
+
+    <div className="service-grid premium-services">
+      <button className="service-tile" onClick={()=>chooseService("Plumber")}>
+        <span className="service-glyph"><Wrench size={20}/></span>
+        <span>{ur?"پلمبنگ":"Plumbing"}</span>
+      </button>
+
+      <button className="service-tile" onClick={()=>chooseService("Electrician")}>
+        <span className="service-glyph"><Zap size={20}/></span>
+        <span>{ur?"الیکٹریشن":"Electrical"}</span>
+      </button>
+
+      <button className="service-tile" onClick={()=>chooseService("AC Technician")}>
+        <span className="service-glyph"><Snowflake size={20}/></span>
+        <span>{ur?"اے سی مرمت":"AC Repair"}</span>
+      </button>
+
+      <button className="service-tile" onClick={()=>chooseService("Cleaner")}>
+        <span className="service-glyph"><Sparkles size={20}/></span>
+        <span>{ur?"صفائی":"Cleaning"}</span>
+      </button>
+    </div>
+
+    <button className="promo-card refined-promo" onClick={()=>setScreen("request")}>
+      <div>
+        <small>{ur?"فوری درخواست":"QUICK REQUEST"}</small>
+        <strong>{ur?"آج ہی کسی ماہر کی ضرورت ہے؟":"Need help today?"}</strong>
+        <span>{ur?"اپنا کام پوسٹ کریں اور قریب کے کاریگروں کی آفرز حاصل کریں۔":"Post your job and compare nearby offers."}</span>
+      </div>
+      <ChevronRight size={22}/>
+    </button>
+
+    <SectionTitle title={ur?"قریب بہترین کاریگر":"Top-rated near you"} action={ur?"سب دیکھیں":"See all"} onClick={()=>setScreen("offers")}/>
+
+    <div className="nearby-list">
+      {nearby.slice(0,3).map(worker=>
+        <button
+          key={worker.id}
+          className="worker-mini improved-worker"
+          onClick={()=>{setSelected(worker);setScreen("workerProfile")}}
+        >
+          <WorkerAvatar worker={worker}/>
+          <div>
+            <strong>{worker.name}</strong>
+            <span>{ur?worker.skillUr:SERVICE_META[worker.skill].en} · ★ {worker.rating} ({worker.jobs})</span>
+            <small>{worker.distance.toFixed(1)} km away · From Rs. {worker.startingRate.toLocaleString()}</small>
+          </div>
+          <span className="availability">{ur?"دستیاب":"Available"}</span>
+        </button>
+      )}
+    </div>
   </div>}
 
   function ScreenHeader(){const titleMap:Partial<Record<Screen,string>>={services:ur?"تمام خدمات":"All services",request:ur?"نئی درخواست":"New request",schedule:ur?"وقت اور بجٹ":"Time & budget",review:ur?"درخواست دیکھیں":"Review request",posted:ur?"درخواست پوسٹ ہوگئی":"Request posted",offers:ur?"آفرز":"Offers",workerProfile:ur?"کاریگر پروفائل":"Worker profile",active:ur?"موجودہ کام":"Current job",chat:selected.name,complete:ur?"کام مکمل":"Job complete",rating:ur?"ریٹنگ":"Rate experience",history:ur?"درخواستوں کی تاریخ":"Request history",account:ur?"اکاؤنٹ":"Account",settings:ur?"ایپ سیٹنگز":"App settings",support:ur?"مدد اور حفاظت":"Safety & support",workerHome:"KaamYab Pro",workerJob:ur?"کام کی تفصیل":"Job details",workerOffer:ur?"اپنی آفر دیں":"Send an offer",workerActive:ur?"موجودہ کام":"Current job",earnings:ur?"آمدنی":"Earnings",workerReviews:ur?"ریویوز":"Reviews",workerSetup:ur?"پروفائل بنائیں":"Create profile"};return <div className="screen-header"><button className="icon-button" onClick={back}><ArrowLeft size={19}/></button><strong>{titleMap[screen]}</strong>{screen==="account"?<button className="lang-button compact" onClick={()=>setLang(ur?"en":"ur")}>{ur?"English":"اردو"}</button>:<span className="header-spacer"/>}</div>}
 
   function Services(){return <div className="screen"><h1 className="page-title">{ur?"آپ کو کس کام میں مدد چاہیے؟":"What can we help with?"}</h1><p className="page-sub">{ur?"سروس منتخب کریں یا اپنا کام تلاش کریں۔":"Choose a category or search for the task you need."}</p><div className="problem-bar compact-bar"><Search size={18}/><input placeholder={ur?"سروس تلاش کریں":"Search services"}/></div><div className="service-list">{(Object.keys(SERVICE_META) as ServiceKey[]).map(s=><button key={s} onClick={()=>chooseService(s)}><span className="list-glyph">{SERVICE_META[s].glyph}</span><span><strong>{ur?SERVICE_META[s].ur:SERVICE_META[s].en}</strong><small>{SERVICE_META[s].note}</small></span><ChevronRight size={18}/></button>)}</div></div>}
 
-  function RequestDetails(){return <div className="screen"><Progress n={2}/><h1 className="page-title">{ur?"تفصیل کی تصدیق کریں":"Confirm the details"}</h1><p className="page-sub">{ur?"جو چیز غلط ہو اسے تبدیل کریں۔":"Change anything that looks wrong."}</p><Field label={ur?"سروس":"Service"}><select value={draft.service} onChange={e=>setDraft(d=>({...d,service:e.target.value as ServiceKey}))}>{<option value="">{ur?"سروس منتخب کریں":"Choose a service"}</option>}{(Object.keys(SERVICE_META) as ServiceKey[]).map(s=><option key={s} value={s}>{ur?SERVICE_META[s].ur:SERVICE_META[s].en}</option>)}</select></Field><Field label={ur?"مسئلہ":"Problem"}><textarea rows={4} value={draft.issue} onChange={e=>setDraft(d=>({...d,issue:e.target.value}))} placeholder={ur?"مثلاً: اے سی چل رہا ہے مگر ٹھنڈا نہیں کر رہا":"Example: AC is running but not cooling"}/></Field><Field label={ur?"مقام":"Location"}><button className="field-button" onClick={()=>setScreen("location")}>{draft.area}<ChevronRight size={17}/></button></Field><button className="primary-button" disabled={!draft.service||!draft.issue.trim()} onClick={()=>setScreen("location")}>{ur?"جاری رکھیں":"Continue"}</button></div>}
+  function RequestDetails(){return <div className="screen"><Progress n={2}/><h1 className="page-title">{ur?"تفصیل کی تصدیق کریں":"Confirm the details"}</h1><p className="page-sub">{ur?"جو چیز غلط ہو اسے تبدیل کریں۔":"Change anything that looks wrong."}</p>
+
+{problemPhoto&&
+  <div className="problem-photo-preview">
+    <img src={problemPhoto} alt="Problem preview"/>
+    <button onClick={()=>photoInputRef.current?.click()}>
+      <Camera size={15}/>
+      {ur?"تصویر تبدیل کریں":"Change photo"}
+    </button>
+  </div>
+}<Field label={ur?"سروس":"Service"}><select value={draft.service} onChange={e=>setDraft(d=>({...d,service:e.target.value as ServiceKey}))}>{<option value="">{ur?"سروس منتخب کریں":"Choose a service"}</option>}{(Object.keys(SERVICE_META) as ServiceKey[]).map(s=><option key={s} value={s}>{ur?SERVICE_META[s].ur:SERVICE_META[s].en}</option>)}</select></Field><Field label={ur?"مسئلہ":"Problem"}><textarea rows={4} value={draft.issue} onChange={e=>setDraft(d=>({...d,issue:e.target.value}))} placeholder={ur?"مثلاً: اے سی چل رہا ہے مگر ٹھنڈا نہیں کر رہا":"Example: AC is running but not cooling"}/></Field><Field label={ur?"مقام":"Location"}><button className="field-button" onClick={()=>setScreen("location")}>{draft.area}<ChevronRight size={17}/></button></Field><button className="primary-button" disabled={!draft.service||!draft.issue.trim()} onClick={()=>setScreen("location")}>{ur?"جاری رکھیں":"Continue"}</button></div>}
 
   function LocationScreen(){return <div className="location-screen"><div className="fake-map"><button className="map-back" onClick={back}><ArrowLeft size={19}/></button><div className="map-label"><small>{ur?"کام کی جگہ":"Job location"}</small><strong>Bahria Town</strong></div><div className="map-pin"><MapPin size={22}/></div></div><div className="location-sheet"><span className="drag-handle"></span><h1 className="page-title">{ur?"مقام کی تصدیق کریں":"Confirm location"}</h1><p className="page-sub">{ur?"ضرورت ہو تو پتہ تبدیل کریں۔":"Adjust the address if needed."}</p><input className="field-control" value={draft.area} onChange={e=>setDraft(d=>({...d,area:e.target.value}))}/><button className="primary-button" onClick={()=>setScreen("schedule")}>{ur?"یہ مقام استعمال کریں":"Use this location"}</button></div></div>}
 
