@@ -68,8 +68,6 @@ Open `http://localhost:3000`.
 KaamYab supports short voice-assisted requests in English, Urdu and Roman Urdu. Text input remains available whenever voice is unavailable.
 Add GROQ_API_KEY to .env.local to enable voice transcription.
 
-Never commit `.env.local`.
-
 ## Build checks
 
 ```bash
