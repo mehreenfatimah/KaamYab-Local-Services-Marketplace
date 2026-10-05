@@ -113,32 +113,33 @@ export default function Page(){
 
   return <main className={ur?"app rtl":"app"} dir={ur?"rtl":"ltr"}>
     <div className="app-shell">
-      {screen==="home"?<HomeScreen/>:<ScreenHeader/>}
-      {screen==="services"&&<Services/>}
-      {screen==="request"&&<RequestDetails/>}
-      {screen==="location"&&<LocationScreen/>}
-      {screen==="schedule"&&<Schedule/>}
-      {screen==="review"&&<ReviewRequest/>}
-      {screen==="posted"&&<Posted/>}
-      {screen==="offers"&&<Offers/>}
-      {screen==="workerProfile"&&<WorkerProfile/>}
-      {screen==="active"&&<ActiveJob/>}
-      {screen==="chat"&&<Chat/>}
-      {screen==="complete"&&<Complete/>}
-      {screen==="rating"&&<Rating/>}
-      {screen==="history"&&<History/>}
-      {screen==="account"&&<Account/>}
-      {screen==="settings"&&<Settings/>}
-      {screen==="support"&&<Support/>}
-      {screen==="workerSetup"&&<WorkerSetup/>}
-      {screen==="workerHome"&&<WorkerHome/>}
-      {screen==="workerJob"&&<WorkerJob/>}
-      {screen==="workerOffer"&&<WorkerOfferScreen/>}
-      {screen==="workerActive"&&<WorkerActive/>}
-      {screen==="earnings"&&<Earnings/>}
-      {screen==="workerReviews"&&<WorkerReviews/>}
-      {showBottom&&<BottomNav/>}
-      {voiceOpen&&<VoiceSheet/>}
+{screen === "home" ? HomeScreen() : ScreenHeader()}
+{screen === "services" && Services()}
+{screen === "request" && RequestDetails()}
+{screen === "location" && LocationScreen()}
+{screen === "schedule" && Schedule()}
+{screen === "review" && ReviewRequest()}
+{screen === "posted" && Posted()}
+{screen === "offers" && Offers()}
+{screen === "workerProfile" && WorkerProfile()}
+{screen === "active" && ActiveJob()}
+{screen === "chat" && Chat()}
+{screen === "complete" && Complete()}
+{screen === "rating" && Rating()}
+{screen === "history" && History()}
+{screen === "account" && Account()}
+{screen === "settings" && Settings()}
+{screen === "support" && Support()}
+{screen === "workerSetup" && WorkerSetup()}
+{screen === "workerHome" && WorkerHome()}
+{screen === "workerJob" && WorkerJob()}
+{screen === "workerOffer" && WorkerOfferScreen()}
+{screen === "workerActive" && WorkerActive()}
+{screen === "earnings" && Earnings()}
+{screen === "workerReviews" && WorkerReviews()}
+
+{showBottom && BottomNav()}
+{voiceOpen && VoiceSheet()}
     </div>
   </main>
 
