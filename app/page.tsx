@@ -24,18 +24,31 @@ const SERVICE_META: Record<ServiceKey, {en:string; ur:string; note:string; glyph
 
 type Screen = "home"|"services"|"request"|"location"|"schedule"|"review"|"posted"|"offers"|"workerProfile"|"active"|"chat"|"complete"|"rating"|"history"|"account"|"settings"|"support"|"workerHome"|"workerJob"|"workerOffer"|"workerActive"|"earnings"|"workerReviews"|"workerSetup";
 
-type Draft = {service:ServiceKey|""; issue:string; area:string; when:"today"|"tomorrow"|"week"|"schedule"; budget:number; urgency:"asap"|"flexible"};
+type Draft = {
+  service: ServiceKey | "";
+  issue: string;
+  area: string;
+  when: "today" | "tomorrow" | "week" | "schedule";
+  scheduledDate: string;
+  scheduledTime: string;
+  budget: number;
+  urgency: "asap" | "flexible";
+};
+
 type ServiceRequest = {
   id: string;
   service: ServiceKey;
   issue: string;
   area: string;
   when: Draft["when"];
+  scheduledDate: string;
+  scheduledTime: string;
   budget: number;
   urgency: Draft["urgency"];
   status: "posted" | "completed" | "cancelled";
   createdAt: string;
 };
+
 
 const EN = {
   home:"Home", requests:"Requests", ask:"Request", activity:"Activity", account:"Account",
@@ -76,7 +89,16 @@ export default function Page(){
   const [problemPhoto,setProblemPhoto]=useState<string>("");
   const [location,setLocation]=useState<[number,number]>([33.5651,73.0169]);
   const [locationLabel,setLocationLabel]=useState("Bahria Town, Rawalpindi");
-  const [draft,setDraft]=useState<Draft>({service:"",issue:"",area:"Bahria Town Phase 4, Rawalpindi",when:"today",budget:2400,urgency:"asap"});
+const [draft,setDraft]=useState<Draft>({
+  service:"",
+  issue:"",
+  area:"Bahria Town Phase 4, Rawalpindi",
+  when:"today",
+  scheduledDate:"",
+  scheduledTime:"",
+  budget:2400,
+  urgency:"asap"
+});
   const [requests, setRequests] = useState<ServiceRequest[]>([]);
   const [selected,setSelected]=useState<Worker>(workers[1]);
   const [workerOnline,setWorkerOnline]=useState(true);
@@ -98,16 +120,18 @@ function postRequest() {
   }
 
   const newRequest: ServiceRequest = {
-    id: crypto.randomUUID(),
-    service: draft.service,
-    issue: draft.issue.trim(),
-    area: draft.area,
-    when: draft.when,
-    budget: draft.budget,
-    urgency: draft.urgency,
-    status: "posted",
-    createdAt: new Date().toISOString(),
-  };
+  id: crypto.randomUUID(),
+  service: draft.service,
+  issue: draft.issue.trim(),
+  area: draft.area,
+  when: draft.when,
+  scheduledDate: draft.scheduledDate,
+  scheduledTime: draft.scheduledTime,
+  budget: draft.budget,
+  urgency: draft.urgency,
+  status: "posted",
+  createdAt: new Date().toISOString(),
+};
 
   setRequests(prev => [newRequest, ...prev]);
   setActiveRequestId(newRequest.id);
@@ -338,7 +362,120 @@ function completeActiveRequest() {
 
   function LocationScreen(){return <div className="location-screen"><div className="fake-map"><button className="map-back" onClick={back}><ArrowLeft size={19}/></button><div className="map-label"><small>{ur?"کام کی جگہ":"Job location"}</small><strong>Bahria Town</strong></div><div className="map-pin"><MapPin size={22}/></div></div><div className="location-sheet"><span className="drag-handle"></span><h1 className="page-title">{ur?"مقام کی تصدیق کریں":"Confirm location"}</h1><p className="page-sub">{ur?"ضرورت ہو تو پتہ تبدیل کریں۔":"Adjust the address if needed."}</p><input className="field-control" value={draft.area} onChange={e=>setDraft(d=>({...d,area:e.target.value}))}/><button className="primary-button" onClick={()=>setScreen("schedule")}>{ur?"یہ مقام استعمال کریں":"Use this location"}</button></div></div>}
 
-  function Schedule(){return <div className="screen"><Progress n={3}/><h1 className="page-title">{ur?"کب اور کتنا بجٹ؟":"When and for how much?"}</h1><Field label={ur?"مدد کب چاہیے؟":"When do you need help?"}><div className="choice-grid">{[["today",ur?"آج":"Today"],["tomorrow",ur?"کل":"Tomorrow"],["week",ur?"اس ہفتے":"This week"],["schedule",ur?"وقت منتخب کریں":"Choose time"]].map(([v,l])=><button key={v} className={draft.when===v?"choice active":"choice"} onClick={()=>setDraft(d=>({...d,when:v as Draft["when"]}))}>{l}</button>)}</div></Field><Field label={ur?"آپ کا بجٹ":"Your budget"}><div className="budget-input"><span>Rs.</span><input type="number" value={draft.budget} onChange={e=>setDraft(d=>({...d,budget:Number(e.target.value)}))}/></div></Field><Field label={ur?"کتنی جلدی؟":"Urgency"}><div className="choice-grid two">{[["asap",ur?"جلد از جلد":"As soon as possible"],["flexible",ur?"وقت لچکدار ہے":"Flexible"]].map(([v,l])=><button key={v} className={draft.urgency===v?"choice active":"choice"} onClick={()=>setDraft(d=>({...d,urgency:v as Draft["urgency"]}))}>{l}</button>)}</div></Field><button className="primary-button" onClick={()=>setScreen("review")}>{ur?"جاری رکھیں":"Continue"}</button></div>}
+function Schedule() {
+  return (
+    <div className="screen">
+      <Progress n={3} />
+
+      <h1 className="page-title">
+        {ur ? "کب اور کتنا بجٹ؟" : "When and for how much?"}
+      </h1>
+
+      <Field label={ur ? "مدد کب چاہیے؟" : "When do you need help?"}>
+        <div className="choice-grid">
+          {[
+            ["today", ur ? "آج" : "Today"],
+            ["tomorrow", ur ? "کل" : "Tomorrow"],
+            ["week", ur ? "اس ہفتے" : "This week"],
+            ["schedule", ur ? "وقت منتخب کریں" : "Choose time"],
+          ].map(([v, l]) => (
+            <button
+              key={v}
+              className={draft.when === v ? "choice active" : "choice"}
+              onClick={() =>
+                setDraft(d => ({
+                  ...d,
+                  when: v as Draft["when"],
+                }))
+              }
+            >
+              {l}
+            </button>
+          ))}
+        </div>
+      </Field>
+
+      {draft.when === "schedule" && (
+        <div className="schedule-picker">
+          <Field label={ur ? "تاریخ منتخب کریں" : "Choose date"}>
+            <input
+              type="date"
+              value={draft.scheduledDate}
+              onChange={e =>
+                setDraft(d => ({
+                  ...d,
+                  scheduledDate: e.target.value,
+                }))
+              }
+            />
+          </Field>
+
+          <Field label={ur ? "وقت منتخب کریں" : "Choose time"}>
+            <input
+              type="time"
+              value={draft.scheduledTime}
+              onChange={e =>
+                setDraft(d => ({
+                  ...d,
+                  scheduledTime: e.target.value,
+                }))
+              }
+            />
+          </Field>
+        </div>
+      )}
+
+      <Field label={ur ? "آپ کا بجٹ" : "Your budget"}>
+        <div className="budget-input">
+          <span>Rs.</span>
+          <input
+            type="number"
+            value={draft.budget}
+            onChange={e =>
+              setDraft(d => ({
+                ...d,
+                budget: Number(e.target.value),
+              }))
+            }
+          />
+        </div>
+      </Field>
+
+      <Field label={ur ? "کتنی جلدی؟" : "Urgency"}>
+        <div className="choice-grid two">
+          {[
+            ["asap", ur ? "جلد از جلد" : "As soon as possible"],
+            ["flexible", ur ? "وقت لچکدار ہے" : "Flexible"],
+          ].map(([v, l]) => (
+            <button
+              key={v}
+              className={draft.urgency === v ? "choice active" : "choice"}
+              onClick={() =>
+                setDraft(d => ({
+                  ...d,
+                  urgency: v as Draft["urgency"],
+                }))
+              }
+            >
+              {l}
+            </button>
+          ))}
+        </div>
+      </Field>
+
+      <button
+        className="primary-button"
+        disabled={
+          draft.when === "schedule" &&
+          (!draft.scheduledDate || !draft.scheduledTime)
+        }
+        onClick={() => setScreen("review")}
+      >
+        {ur ? "جاری رکھیں" : "Continue"}
+      </button>
+    </div>
+  );
+}
 
   function ReviewRequest(){return <div className="screen"><h1 className="page-title">{ur?"پوسٹ کرنے کے لیے تیار؟":"Ready to post?"}</h1><div className="summary-card"><div><strong>{draft.service?ur?SERVICE_META[draft.service].ur:SERVICE_META[draft.service].en:"Service"}</strong><span>{draft.issue}</span></div><span className="pill">{draft.when==="today"?(ur?"آج":"Today"):draft.when}</span><hr/><InfoRow k={ur?"مقام":"Location"} v={draft.area}/><InfoRow k={ur?"بجٹ":"Budget"} v={`Rs. ${draft.budget.toLocaleString()}`}/></div><button className="primary-button" onClick={postRequest}>{ur ? "درخواست پوسٹ کریں" : "Post request"}</button><button className="secondary-button" onClick={()=>setScreen("request")}>{ur?"تفصیل تبدیل کریں":"Edit details"}</button></div>}
 
