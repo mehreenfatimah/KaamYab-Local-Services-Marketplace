@@ -70,6 +70,12 @@ export default function Page(){
   const [activeRequestId, setActiveRequestId] =
     useState<string | null>(null);
 
+  const [chatInput, setChatInput] = useState("");
+
+  const [messages, setMessages] = useState<
+    { id: string; sender: "customer" | "worker"; text: string }[]
+  >([]);
+
   useEffect(()=>{
     const timer=setTimeout(()=>setShowSplash(false),1600);
     return ()=>clearTimeout(timer);
@@ -89,6 +95,24 @@ export default function Page(){
   const [problemPhoto,setProblemPhoto]=useState<string>("");
   const [location,setLocation]=useState<[number,number]>([33.5651,73.0169]);
   const [locationLabel,setLocationLabel]=useState("Bahria Town, Rawalpindi");
+
+  function sendMessage() {
+    const text = chatInput.trim();
+
+    if (!text) return;
+
+    setMessages(prev => [
+      ...prev,
+      {
+        id: crypto.randomUUID(),
+        sender: "customer",
+        text,
+      },
+    ]);
+
+    setChatInput("");
+  }
+
 const [draft,setDraft]=useState<Draft>({
   service:"",
   issue:"",
@@ -487,7 +511,53 @@ function Schedule() {
 
   function ActiveJob(){return <div className="screen"><div className="summary-card"><span className="pill success">{ur?"تصدیق شدہ":"Confirmed"}</span><h2>{draft.service?ur?SERVICE_META[draft.service].ur:SERVICE_META[draft.service].en:"AC repair"}</h2><p>{selected.name} · Rs. {draft.budget.toLocaleString()}</p></div><SectionTitle title={ur?"حالت":"Status"}/><Timeline current={2}/><button className="primary-button" onClick={()=>setScreen("chat")}><Phone size={17}/>{ur?"کاریگر سے رابطہ":"Contact worker"}</button><button className="secondary-button" onClick={completeActiveRequest}> {ur ? "کام مکمل کریں" : "Mark job complete"}</button></div>}
 
-  function Chat(){return <div className="chat-screen"><div className="chat-body"><div className="bubble theirs">Assalam o Alaikum. I can reach in around 35 minutes.</div><div className="bubble mine">Perfect, please call when you arrive.</div><div className="bubble theirs">Sure. I’ll bring the required tools as well.</div></div><div className="chat-input"><input placeholder={ur?"پیغام لکھیں":"Write a message…"}/><button><Send size={18}/></button></div></div>}
+function Chat() {
+  return (
+    <div className="chat-screen">
+      <div className="chat-body">
+        {messages.length === 0 ? (
+          <div className="empty-state">
+            <p>
+              {ur
+                ? "ابھی کوئی پیغام نہیں۔ گفتگو شروع کریں۔"
+                : "No messages yet. Start the conversation."}
+            </p>
+          </div>
+        ) : (
+          messages.map(message => (
+            <div
+              key={message.id}
+              className={
+                message.sender === "customer"
+                  ? "bubble mine"
+                  : "bubble theirs"
+              }
+            >
+              {message.text}
+            </div>
+          ))
+        )}
+      </div>
+
+      <div className="chat-input">
+        <input
+          value={chatInput}
+          onChange={e => setChatInput(e.target.value)}
+          onKeyDown={e => {
+            if (e.key === "Enter") {
+              sendMessage();
+            }
+          }}
+          placeholder={ur ? "پیغام لکھیں" : "Write a message…"}
+        />
+
+        <button onClick={sendMessage}>
+          <Send size={18} />
+        </button>
+      </div>
+    </div>
+  );
+}
 
   function Complete(){return <div className="screen success-screen"><div className="success-icon green"><Check size={36}/></div><h1 className="page-title">{ur?"کام مکمل ہوگیا":"Job completed"}</h1><p className="page-sub">{selected.name} {ur?"نے کام مکمل نشان زد کیا۔":"marked the job as complete."}</p><div className="summary-card left"><InfoRow k={ur?"آخری رقم":"Final amount"} v={`Rs. ${draft.budget.toLocaleString()}`}/><InfoRow k={ur?"مکمل ہوا":"Completed"} v={ur?"آج، 2:18 PM":"Today, 2:18 PM"}/></div><button className="primary-button" onClick={()=>setScreen("rating")}>{ur?"تجربہ ریٹ کریں":"Rate your experience"}</button></div>}
 
