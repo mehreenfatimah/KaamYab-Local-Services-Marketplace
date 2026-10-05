@@ -242,7 +242,9 @@ export default function Page(){
 
   const completedCount = requests.filter(r=>r.status==="completed").length;
   const activeCount = requests.filter(r=>r.status==="posted" || r.status==="accepted").length;
-  const recentRequests = [...requests].sort((a,b)=>+new Date(b.createdAt)-+new Date(a.createdAt)).slice(0,3);
+const recentRequests = [...requests]
+  .sort((a,b)=>+new Date(b.createdAt)-+new Date(a.createdAt))
+  .slice(0,1);
 
   function resetDraft(){
     setDraft({
@@ -620,11 +622,7 @@ export default function Page(){
       </button>
 
       <SectionTitle title={ur?"حالیہ کام":"Recent work"} action={ur?"سب دیکھیں":"See all"} onClick={()=>setScreen("history")}/>
-      <div className="stats-grid">
-        <Stat n={completedCount} l={ur?"مکمل":"Completed"}/>
-        <Stat n={activeCount} l={ur?"فعال":"Active"}/>
-        <Stat n={requests.length} l={ur?"کل درخواستیں":"Requests"}/>
-      </div>
+      
 
       <div className="menu-list">
         {recentRequests.map(req=>
