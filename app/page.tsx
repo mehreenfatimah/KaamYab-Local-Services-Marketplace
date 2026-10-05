@@ -50,7 +50,7 @@ const UR = {
 
 export default function Page(){
   const [showSplash,setShowSplash]=useState(true);
-
+const [historyFilter, setHistoryFilter] = useState<"all" | "completed" | "cancelled">("all");
   useEffect(()=>{
     const timer=setTimeout(()=>setShowSplash(false),1600);
     return ()=>clearTimeout(timer);
@@ -338,33 +338,54 @@ function postRequest() {
   function Rating(){return <div className="screen rating-screen"><WorkerAvatar worker={selected} large/><h1 className="page-title">{ur?`${selected.name} کیسے تھے؟`:`How was ${selected.name.split(" ")[0]}?`}</h1><div className="stars">{[1,2,3,4,5].map(n=><button key={n} onClick={()=>setRating(n)} className={n<=rating?"on":""}>★</button>)}</div><p className="page-sub">{ur?"آپ کا ریویو دوسروں کو بہتر انتخاب میں مدد دیتا ہے۔":"Your review helps other customers choose confidently."}</p><textarea className="field-control tall" value={review} onChange={e=>setReview(e.target.value)} placeholder={ur?"مختصر ریویو لکھیں":"Write a short review…"}/><button className="primary-button" onClick={()=>setScreen("home")}>{ur?"ریویو جمع کریں":"Submit review"}</button></div>}
 
 function History() {
+  const filteredRequests =
+    historyFilter === "all"
+      ? requests
+      : requests.filter(req => req.status === historyFilter);
+
   return (
     <div className="screen">
       <div className="filter-row">
-        <button className="active">
+        <button
+          className={historyFilter === "all" ? "active" : ""}
+          onClick={() => setHistoryFilter("all")}
+        >
           {ur ? "سب" : "All"}
         </button>
 
-        <button>
+        <button
+          className={historyFilter === "completed" ? "active" : ""}
+          onClick={() => setHistoryFilter("completed")}
+        >
           {ur ? "مکمل" : "Completed"}
         </button>
 
-        <button>
+        <button
+          className={historyFilter === "cancelled" ? "active" : ""}
+          onClick={() => setHistoryFilter("cancelled")}
+        >
           {ur ? "منسوخ" : "Cancelled"}
         </button>
       </div>
 
-      {requests.length === 0 ? (
+      {filteredRequests.length === 0 ? (
         <div className="empty-state">
-          <h3>{ur ? "ابھی کوئی درخواست نہیں" : "No requests yet"}</h3>
-          <p>
-            {ur
-              ? "آپ کی پوسٹ کی گئی درخواستیں یہاں نظر آئیں گی۔"
-              : "Your posted requests will appear here."}
-          </p>
+          <h3>
+            {historyFilter === "all"
+              ? ur
+                ? "ابھی کوئی درخواست نہیں"
+                : "No requests yet"
+              : historyFilter === "completed"
+              ? ur
+                ? "ابھی کوئی مکمل درخواست نہیں"
+                : "No completed requests yet"
+              : ur
+              ? "ابھی کوئی منسوخ درخواست نہیں"
+              : "No cancelled requests yet"}
+          </h3>
         </div>
       ) : (
-        requests.map(req => (
+        filteredRequests.map(req => (
           <HistoryRow
             key={req.id}
             title={
@@ -372,9 +393,7 @@ function History() {
                 ? SERVICE_META[req.service].ur
                 : SERVICE_META[req.service].en
             }
-            meta={`${req.area} · ${new Date(
-              req.createdAt
-            ).toLocaleTimeString([], {
+            meta={`${req.area} · ${new Date(req.createdAt).toLocaleTimeString([], {
               hour: "2-digit",
               minute: "2-digit",
             })}`}
