@@ -50,12 +50,17 @@ const UR = {
 
 export default function Page(){
   const [showSplash,setShowSplash]=useState(true);
-const [historyFilter, setHistoryFilter] = useState<"all" | "completed" | "cancelled">("all");
+
+  const [historyFilter, setHistoryFilter] =
+    useState<"all" | "completed" | "cancelled">("all");
+
+  const [activeRequestId, setActiveRequestId] =
+    useState<string | null>(null);
+
   useEffect(()=>{
     const timer=setTimeout(()=>setShowSplash(false),1600);
     return ()=>clearTimeout(timer);
   },[]);
-
 
   const [lang,setLang]=useState<Language>("en");
   const ur=lang==="ur", t=ur?UR:EN;
@@ -105,9 +110,23 @@ function postRequest() {
   };
 
   setRequests(prev => [newRequest, ...prev]);
+  setActiveRequestId(newRequest.id);
   setScreen("posted");
 }
 
+function completeActiveRequest() {
+  if (!activeRequestId) return;
+
+  setRequests(prev =>
+    prev.map(req =>
+      req.id === activeRequestId
+        ? { ...req, status: "completed" }
+        : req
+    )
+  );
+
+  setScreen("complete");
+}
 
   function back(){
     const map:Partial<Record<Screen,Screen>>={services:"home",request:"home",location:"request",schedule:"location",review:"schedule",posted:"review",offers:"posted",workerProfile:"offers",active:"offers",chat:"active",complete:"active",rating:"complete",history:"home",account:"home",settings:"account",support:"account",workerHome:"account",workerJob:"workerHome",workerOffer:"workerJob",workerActive:"workerHome",earnings:"workerHome",workerReviews:"workerHome",workerSetup:"account"};
@@ -329,7 +348,7 @@ function postRequest() {
 
   function WorkerProfile(){return <div className="screen"><div className="profile-head"><WorkerAvatar worker={selected} large/><h1>{selected.name}</h1><p>{ur?selected.skillUr:SERVICE_META[selected.skill].en} · {selected.city}</p><div><span className="pill success">{ur?"شناخت تصدیق شدہ":"Identity verified"}</span> {selected.available&&<span className="pill success">{ur?"ابھی دستیاب":"Available now"}</span>}</div></div><div className="stats-grid"><Stat n={selected.rating} l={ur?"ریٹنگ":"Rating"}/><Stat n={selected.jobs} l={ur?"کام":"Jobs"}/><Stat n={`${selected.experienceYears} yrs`} l={ur?"تجربہ":"Experience"}/></div><SectionTitle title={ur?"حالیہ کام":"Recent work"} action={ur?"سب دیکھیں":"See all"}/><div className="gallery"><span></span><span></span><span></span></div><SectionTitle title={ur?"ریویوز":"Reviews"} action={`${selected.jobs} ${ur?"ریویوز":"reviews"}`}/><div className="review-card"><strong>★★★★★</strong><p>{ur?"وقت پر آئے اور کام صحیح کیا۔":"Reached on time and fixed the problem properly."}</p></div><button className="primary-button" onClick={()=>setScreen("active")}>{ur?`${selected.name} کو منتخب کریں`:`Request ${selected.name.split(" ")[0]}`}</button></div>}
 
-  function ActiveJob(){return <div className="screen"><div className="summary-card"><span className="pill success">{ur?"تصدیق شدہ":"Confirmed"}</span><h2>{draft.service?ur?SERVICE_META[draft.service].ur:SERVICE_META[draft.service].en:"AC repair"}</h2><p>{selected.name} · Rs. {draft.budget.toLocaleString()}</p></div><SectionTitle title={ur?"حالت":"Status"}/><Timeline current={2}/><button className="primary-button" onClick={()=>setScreen("chat")}><Phone size={17}/>{ur?"کاریگر سے رابطہ":"Contact worker"}</button><button className="secondary-button" onClick={()=>setScreen("complete")}>{ur?"ڈیمو: کام مکمل کریں":"Demo: mark complete"}</button></div>}
+  function ActiveJob(){return <div className="screen"><div className="summary-card"><span className="pill success">{ur?"تصدیق شدہ":"Confirmed"}</span><h2>{draft.service?ur?SERVICE_META[draft.service].ur:SERVICE_META[draft.service].en:"AC repair"}</h2><p>{selected.name} · Rs. {draft.budget.toLocaleString()}</p></div><SectionTitle title={ur?"حالت":"Status"}/><Timeline current={2}/><button className="primary-button" onClick={()=>setScreen("chat")}><Phone size={17}/>{ur?"کاریگر سے رابطہ":"Contact worker"}</button><button className="secondary-button" onClick={completeActiveRequest}> {ur ? "کام مکمل کریں" : "Mark job complete"}</button></div>}
 
   function Chat(){return <div className="chat-screen"><div className="chat-body"><div className="bubble theirs">Assalam o Alaikum. I can reach in around 35 minutes.</div><div className="bubble mine">Perfect, please call when you arrive.</div><div className="bubble theirs">Sure. I’ll bring the required tools as well.</div></div><div className="chat-input"><input placeholder={ur?"پیغام لکھیں":"Write a message…"}/><button><Send size={18}/></button></div></div>}
 
