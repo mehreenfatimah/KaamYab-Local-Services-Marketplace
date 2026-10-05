@@ -25,6 +25,17 @@ const SERVICE_META: Record<ServiceKey, {en:string; ur:string; note:string; glyph
 type Screen = "home"|"services"|"request"|"location"|"schedule"|"review"|"posted"|"offers"|"workerProfile"|"active"|"chat"|"complete"|"rating"|"history"|"account"|"settings"|"support"|"workerHome"|"workerJob"|"workerOffer"|"workerActive"|"earnings"|"workerReviews"|"workerSetup";
 
 type Draft = {service:ServiceKey|""; issue:string; area:string; when:"today"|"tomorrow"|"week"|"schedule"; budget:number; urgency:"asap"|"flexible"};
+type ServiceRequest = {
+  id: string;
+  service: ServiceKey;
+  issue: string;
+  area: string;
+  when: Draft["when"];
+  budget: number;
+  urgency: Draft["urgency"];
+  status: "posted" | "completed" | "cancelled";
+  createdAt: string;
+};
 
 const EN = {
   home:"Home", requests:"Requests", ask:"Request", activity:"Activity", account:"Account",
@@ -61,13 +72,42 @@ export default function Page(){
   const [location,setLocation]=useState<[number,number]>([33.5651,73.0169]);
   const [locationLabel,setLocationLabel]=useState("Bahria Town, Rawalpindi");
   const [draft,setDraft]=useState<Draft>({service:"",issue:"",area:"Bahria Town Phase 4, Rawalpindi",when:"today",budget:2400,urgency:"asap"});
+  const [requests, setRequests] = useState<ServiceRequest[]>([]);
   const [selected,setSelected]=useState<Worker>(workers[1]);
   const [workerOnline,setWorkerOnline]=useState(true);
   const [rating,setRating]=useState(5);
   const [review,setReview]=useState("");
 
   const nearby=useMemo(()=>workers.map(w=>({...w,distance:distanceKm(location[0],location[1],w.lat,w.lng)})).sort((a,b)=>Number(b.available)-Number(a.available)||a.distance-b.distance),[location]);
-  const offers:WorkerOffer[]=nearby.slice(0,3).map((w,i)=>({worker:w,price:[2400,2000,2700][i],etaMin:[35,60,50][i],note:i===0?"Can inspect and repair today.":undefined}));
+  const offers: WorkerOffer[] = nearby.slice(0,3).map((w,i) => ({
+  worker: w,
+  price: [2400,2000,2700][i],
+  etaMin: [35,60,50][i],
+  note: i===0 ? "Can inspect and repair today." : undefined
+}));
+
+function postRequest() {
+  if (!draft.service) {
+    alert("Please select a service.");
+    return;
+  }
+
+  const newRequest: ServiceRequest = {
+    id: crypto.randomUUID(),
+    service: draft.service,
+    issue: draft.issue.trim(),
+    area: draft.area,
+    when: draft.when,
+    budget: draft.budget,
+    urgency: draft.urgency,
+    status: "posted",
+    createdAt: new Date().toISOString(),
+  };
+
+  setRequests(prev => [newRequest, ...prev]);
+  setScreen("posted");
+}
+
 
   function back(){
     const map:Partial<Record<Screen,Screen>>={services:"home",request:"home",location:"request",schedule:"location",review:"schedule",posted:"review",offers:"posted",workerProfile:"offers",active:"offers",chat:"active",complete:"active",rating:"complete",history:"home",account:"home",settings:"account",support:"account",workerHome:"account",workerJob:"workerHome",workerOffer:"workerJob",workerActive:"workerHome",earnings:"workerHome",workerReviews:"workerHome",workerSetup:"account"};
@@ -281,7 +321,7 @@ export default function Page(){
 
   function Schedule(){return <div className="screen"><Progress n={3}/><h1 className="page-title">{ur?"کب اور کتنا بجٹ؟":"When and for how much?"}</h1><Field label={ur?"مدد کب چاہیے؟":"When do you need help?"}><div className="choice-grid">{[["today",ur?"آج":"Today"],["tomorrow",ur?"کل":"Tomorrow"],["week",ur?"اس ہفتے":"This week"],["schedule",ur?"وقت منتخب کریں":"Choose time"]].map(([v,l])=><button key={v} className={draft.when===v?"choice active":"choice"} onClick={()=>setDraft(d=>({...d,when:v as Draft["when"]}))}>{l}</button>)}</div></Field><Field label={ur?"آپ کا بجٹ":"Your budget"}><div className="budget-input"><span>Rs.</span><input type="number" value={draft.budget} onChange={e=>setDraft(d=>({...d,budget:Number(e.target.value)}))}/></div></Field><Field label={ur?"کتنی جلدی؟":"Urgency"}><div className="choice-grid two">{[["asap",ur?"جلد از جلد":"As soon as possible"],["flexible",ur?"وقت لچکدار ہے":"Flexible"]].map(([v,l])=><button key={v} className={draft.urgency===v?"choice active":"choice"} onClick={()=>setDraft(d=>({...d,urgency:v as Draft["urgency"]}))}>{l}</button>)}</div></Field><button className="primary-button" onClick={()=>setScreen("review")}>{ur?"جاری رکھیں":"Continue"}</button></div>}
 
-  function ReviewRequest(){return <div className="screen"><h1 className="page-title">{ur?"پوسٹ کرنے کے لیے تیار؟":"Ready to post?"}</h1><div className="summary-card"><div><strong>{draft.service?ur?SERVICE_META[draft.service].ur:SERVICE_META[draft.service].en:"Service"}</strong><span>{draft.issue}</span></div><span className="pill">{draft.when==="today"?(ur?"آج":"Today"):draft.when}</span><hr/><InfoRow k={ur?"مقام":"Location"} v={draft.area}/><InfoRow k={ur?"بجٹ":"Budget"} v={`Rs. ${draft.budget.toLocaleString()}`}/></div><button className="primary-button" onClick={()=>setScreen("posted")}>{ur?"درخواست پوسٹ کریں":"Post request"}</button><button className="secondary-button" onClick={()=>setScreen("request")}>{ur?"تفصیل تبدیل کریں":"Edit details"}</button></div>}
+  function ReviewRequest(){return <div className="screen"><h1 className="page-title">{ur?"پوسٹ کرنے کے لیے تیار؟":"Ready to post?"}</h1><div className="summary-card"><div><strong>{draft.service?ur?SERVICE_META[draft.service].ur:SERVICE_META[draft.service].en:"Service"}</strong><span>{draft.issue}</span></div><span className="pill">{draft.when==="today"?(ur?"آج":"Today"):draft.when}</span><hr/><InfoRow k={ur?"مقام":"Location"} v={draft.area}/><InfoRow k={ur?"بجٹ":"Budget"} v={`Rs. ${draft.budget.toLocaleString()}`}/></div><button className="primary-button" onClick={postRequest}>{ur ? "درخواست پوسٹ کریں" : "Post request"}</button><button className="secondary-button" onClick={()=>setScreen("request")}>{ur?"تفصیل تبدیل کریں":"Edit details"}</button></div>}
 
   function Posted(){return <div className="screen success-screen"><div className="success-icon"><Check size={36}/></div><h1 className="page-title">{ur?"آپ کی درخواست لائیو ہے":"Your request is live"}</h1><p className="page-sub">{ur?"قریب کے کاریگر اب آپ کو آفر بھیج سکتے ہیں۔":"Nearby professionals can now send you offers. We’ll notify you as they arrive."}</p><div className="summary-card left"><InfoRow k={draft.service?ur?SERVICE_META[draft.service].ur:SERVICE_META[draft.service].en:"Service"} v={draft.area}/></div><button className="primary-button" onClick={()=>setScreen("offers")}>{ur?"آفرز دیکھیں":"View offers"}</button><button className="secondary-button" onClick={()=>setScreen("home")}>{ur?"ہوم پر واپس":"Back to home"}</button></div>}
 
@@ -297,7 +337,55 @@ export default function Page(){
 
   function Rating(){return <div className="screen rating-screen"><WorkerAvatar worker={selected} large/><h1 className="page-title">{ur?`${selected.name} کیسے تھے؟`:`How was ${selected.name.split(" ")[0]}?`}</h1><div className="stars">{[1,2,3,4,5].map(n=><button key={n} onClick={()=>setRating(n)} className={n<=rating?"on":""}>★</button>)}</div><p className="page-sub">{ur?"آپ کا ریویو دوسروں کو بہتر انتخاب میں مدد دیتا ہے۔":"Your review helps other customers choose confidently."}</p><textarea className="field-control tall" value={review} onChange={e=>setReview(e.target.value)} placeholder={ur?"مختصر ریویو لکھیں":"Write a short review…"}/><button className="primary-button" onClick={()=>setScreen("home")}>{ur?"ریویو جمع کریں":"Submit review"}</button></div>}
 
-  function History(){return <div className="screen"><div className="filter-row"><button className="active">{ur?"سب":"All"}</button><button>{ur?"مکمل":"Completed"}</button><button>{ur?"منسوخ":"Cancelled"}</button></div><SectionTitle title="12 Sep"/><HistoryRow title="AC repair" meta="Bahria Town · 4:01 PM" price="Rs. 2,400"/><HistoryRow title="Plumbing" meta="PWD · 8:06 AM" price="Rs. 1,800"/><SectionTitle title="10 Aug"/><HistoryRow title={ur?"منسوخ":"Cancelled"} meta="Electrical · Bahria Town" price="Rs. 0" danger/></div>}
+function History() {
+  return (
+    <div className="screen">
+      <div className="filter-row">
+        <button className="active">
+          {ur ? "سب" : "All"}
+        </button>
+
+        <button>
+          {ur ? "مکمل" : "Completed"}
+        </button>
+
+        <button>
+          {ur ? "منسوخ" : "Cancelled"}
+        </button>
+      </div>
+
+      {requests.length === 0 ? (
+        <div className="empty-state">
+          <h3>{ur ? "ابھی کوئی درخواست نہیں" : "No requests yet"}</h3>
+          <p>
+            {ur
+              ? "آپ کی پوسٹ کی گئی درخواستیں یہاں نظر آئیں گی۔"
+              : "Your posted requests will appear here."}
+          </p>
+        </div>
+      ) : (
+        requests.map(req => (
+          <HistoryRow
+            key={req.id}
+            title={
+              ur
+                ? SERVICE_META[req.service].ur
+                : SERVICE_META[req.service].en
+            }
+            meta={`${req.area} · ${new Date(
+              req.createdAt
+            ).toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}`}
+            price={`Rs. ${req.budget.toLocaleString()}`}
+            danger={req.status === "cancelled"}
+          />
+        ))
+      )}
+    </div>
+  );
+}
 
   function Account(){return <div className="screen"><div className="account-user"><span className="user-avatar">DC</span><div><strong>Demo Customer</strong><span>0300 1234567</span></div><ChevronRight size={18}/></div><SectionTitle title={ur?"آپ کا کامیاب":"Your KaamYab"}/><MenuList items={[["Notifications","Bell"],["Saved workers","Star"],["Addresses","Map"]]}/><SectionTitle title={ur?"کامیاب کے ساتھ کام کریں":"Work with KaamYab"}/><button className="menu-card" onClick={()=>setScreen("workerSetup")}><BriefcaseBusiness size={18}/><span><strong>{ur?"اپنی سروس دیں":"Offer your services"}</strong><small>{ur?"کاریگر پروفائل بنائیں":"Create a worker profile"}</small></span><ChevronRight size={18}/></button><SectionTitle title={ur?"مدد":"Support"}/><button className="menu-card" onClick={()=>setScreen("support")}><ShieldCheck size={18}/><span><strong>{ur?"مدد اور حفاظت":"Help & safety"}</strong></span><ChevronRight size={18}/></button><button className="menu-card" onClick={()=>setScreen("settings")}><Languages size={18}/><span><strong>{ur?"ایپ سیٹنگز":"App settings"}</strong></span><ChevronRight size={18}/></button></div>}
 
