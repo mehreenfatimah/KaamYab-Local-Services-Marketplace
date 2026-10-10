@@ -85,6 +85,10 @@ A production deployment would require persistent accounts, phone verification, a
 
 See `docs/PRODUCTION_ARCHITECTURE.md` for the proposed production path.
 
-## Project background
+## Project Overview
 
-KaamYab originated as a hackathon project focused on improving access to local skilled workers through bilingual and voice-assisted interactions. Since then, the project has been expanded into a two-sided marketplace with customer and worker flows, location-aware discovery, service requests, worker offers, ratings and job tracking.
+KaamYab is a bilingual local-services marketplace for Pakistan, built using Next.js, React, and TypeScript.
+
+It provides interactive customer and worker experiences, including service discovery, request creation, worker offers, ratings, job tracking, and voice-assisted interactions.
+
+The application supports English and Urdu interfaces and demonstrates marketplace workflows using sample data.
